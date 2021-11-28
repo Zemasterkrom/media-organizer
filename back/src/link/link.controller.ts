@@ -7,6 +7,7 @@ import {
   Param,
   Post,
   Put,
+  UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
@@ -28,6 +29,7 @@ import { HttpInterceptor } from '../interceptors/http.interceptor';
 import { LinkService } from './link.service';
 import { LinkEntity } from './entities/link.entity';
 import { LinkDto } from './dto/link.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @ApiTags('link')
 @Controller('link')
@@ -110,6 +112,16 @@ export class LinkController {
   @Post('add')
   add(@Body() linkDto: LinkDto): Observable<LinkEntity> {
     return this._linkService.add(linkDto);
+  }
+
+  @Post('doc')
+  @UseInterceptors(
+    FileInterceptor('document', {
+      dest: './uploads',
+    }),
+  )
+  uploadDocument(@UploadedFile() file): Observable<string> {
+    return file;
   }
 
   /**
