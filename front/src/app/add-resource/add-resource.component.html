@@ -1,0 +1,22 @@
+<div class="center">
+
+  <h1>Ajouter une ressource</h1>
+
+  <mat-tab-group>
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon svgIcon="note"></mat-icon>
+        Note
+      </ng-template>
+      <note-form (cancel)="goToHome()"></note-form>
+    </mat-tab>
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon svgIcon="youtube"></mat-icon>
+        <mat-icon svgIcon="dailymotion"></mat-icon>
+        Vidéo en ligne
+      </ng-template>
+      <online-video-form (cancel)="goToHome()"></online-video-form>
+    </mat-tab>
+  </mat-tab-group>
+</div>

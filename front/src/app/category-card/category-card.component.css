@@ -1,11 +1,7 @@
-mat-card {
-  width: 128px;
+mat-card img {
+  max-width: 48px;
 }
 
 mat-card:hover {
   transform: scale(1.1);
-}
-
-img {
-  max-width: 48px;
 }

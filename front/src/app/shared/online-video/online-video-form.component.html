@@ -1,0 +1,27 @@
+<mat-dialog-content>
+  <form novalidate [formGroup]="form">
+    <table>
+      <tr>
+        <td>
+          <mat-form-field class="mat-form-field-wrapper">
+            <input autocomplete="disabled" matInput placeholder="Nom de la vidéo" formControlName="name" required name="name" />
+            <mat-error *ngIf="form.get('name')?.dirty && form.get('name')?.hasError('notEmpty')">
+              Le nom de la vidéo ne peut pas être <strong>vide</strong>
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field>
+            <input autocomplete="disabled"  matInput placeholder="URL de la vidéo" formControlName="url" required name="url" />
+            <mat-error *ngIf="form.get('url')?.dirty &&  form.get('url')?.hasError('videoUrl')">
+              L'URL doit être un lien vers une vidéo YouTube ou Dailymotion
+            </mat-error>
+          </mat-form-field>
+        </td>
+      </tr>
+    </table>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <button mat-button type="button" (click)="cancel()">Annuler</button>
+  <button mat-button color="primary" type="submit" [disabled]="form.invalid">Ajouter</button>
+</mat-dialog-actions>
