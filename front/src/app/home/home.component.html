@@ -1,0 +1,13 @@
+<div class="fill-center">
+  <div class="container">
+    <div id="addResource">
+      <button mat-raised-button>
+        <mat-icon svgIcon="add" class="space-left-right"></mat-icon>
+        <span class="space-left-right">Ajouter une ressource</span>
+      </button>
+    </div>
+    <section class="center">
+      <category-card [category]="category" *ngFor="let category of categories"></category-card>
+    </section>
+  </div>
+</div>

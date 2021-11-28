@@ -19,5 +19,6 @@ export class AppComponent {
    */
   constructor(private _matIconRegistry: MatIconRegistry, private _domSanitizer: DomSanitizer) {
     this._matIconRegistry.addSvgIcon('icon', this._domSanitizer.bypassSecurityTrustResourceUrl('/assets/icon.svg'));
+    this._matIconRegistry.addSvgIcon('add', this._domSanitizer.bypassSecurityTrustResourceUrl('/assets/library_add.svg'));
   }
 }

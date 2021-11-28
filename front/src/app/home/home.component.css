@@ -1,0 +1,15 @@
+
+
+section {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+}
+
+#addResource {
+  position: fixed;
+  bottom: 32px;
+  right: 32px;
+  width: auto;
+  height: auto;
+}

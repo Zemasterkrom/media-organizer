@@ -7,10 +7,17 @@ import {MatToolbarModule} from "@angular/material/toolbar";
 import {HttpClientModule} from "@angular/common/http";
 import {MatIconModule} from "@angular/material/icon";
 import {RouterModule} from "@angular/router";
+import { HomeComponent } from './home/home.component';
+import { CategoryCardComponent } from './category-card/category-card.component';
+import {MatCardModule} from "@angular/material/card";
+import {AppRoutingModule} from "./app-routing.module";
+import {MatButtonModule} from "@angular/material/button";
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    HomeComponent,
+    CategoryCardComponent
   ],
   imports: [
     BrowserModule,
@@ -18,7 +25,10 @@ import {RouterModule} from "@angular/router";
     MatToolbarModule,
     HttpClientModule,
     MatIconModule,
-    RouterModule
+    RouterModule,
+    MatCardModule,
+    AppRoutingModule,
+    MatButtonModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -11,3 +11,30 @@ html, body {
   text-align: center;
   flex-direction: column;
 }
+
+.space-left-right {
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+.no-decoration {
+  text-decoration: none;
+}
+
+.smooth-transition {
+  transition: all 1s !important;
+}
+
+.fill-remaining-space {
+  display: flex;
+  flex-flow: column;
+  height: 100%;
+}
+
+.fill-remaining-space .container, .fill-remaining-space > .container .fill-center {
+  height: 100%;
+}
+
+.fill-center {
+  flex: auto;
+}
