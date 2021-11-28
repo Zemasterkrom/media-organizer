@@ -2,7 +2,7 @@ import * as mongoose from 'mongoose';
 import { Document } from 'mongoose';
 import { Prop, raw, Schema, SchemaFactory } from '@nestjs/mongoose';
 
-export type LinkDocument = Link & Document;
+export type NoteDocument = Note & Document;
 
 @Schema({
   toJSON: {
@@ -14,7 +14,7 @@ export type LinkDocument = Link & Document;
   },
   versionKey: false,
 })
-export class Link {
+export class Note {
   @Prop({
     type: mongoose.Schema.Types.ObjectId,
     auto: true,
@@ -38,9 +38,9 @@ export class Link {
   @Prop({
     type: String,
     required: true,
-    trim: true,
+    trim: false,
   })
-  link: string;
+  note: string;
 
   @Prop({
     type: Date,
@@ -49,4 +49,4 @@ export class Link {
   date: string;
 }
 
-export const LinkSchema = SchemaFactory.createForClass(Link);
+export const NoteSchema = SchemaFactory.createForClass(Note);

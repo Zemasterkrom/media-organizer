@@ -2,7 +2,7 @@ import { Exclude, Expose, Type } from 'class-transformer';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 @Exclude()
-export class LinkEntity {
+export class NoteEntity {
   @ApiProperty({
     name: 'id',
     description: 'Unique identifier in the database',
@@ -18,13 +18,13 @@ export class LinkEntity {
   name: string;
 
   @ApiProperty({
-    name: 'link',
+    name: 'note',
     description: 'URL',
     example: 'https://google.com/',
   })
   @Expose()
   @Type(() => String)
-  link: string;
+  note: string;
 
   @ApiProperty({ name: 'type', description: 'type', example: 'type' })
   @Expose()
@@ -40,7 +40,7 @@ export class LinkEntity {
   @Type(() => Date)
   date: string;
 
-  constructor(partial: Partial<LinkEntity>) {
+  constructor(partial: Partial<NoteEntity>) {
     Object.assign(this, partial);
   }
 }

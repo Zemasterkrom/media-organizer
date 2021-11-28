@@ -1,8 +1,8 @@
 import { IsNotEmpty, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { LinkEntity } from '../entities/link.entity';
+import { NoteEntity } from '../entities/note.entity';
 
-export class LinkDto {
+export class NoteDto {
   @ApiProperty({
     name: 'name',
     description: 'name',
@@ -22,13 +22,13 @@ export class LinkDto {
   type: string;
 
   @ApiProperty({
-    name: 'link',
-    description: 'link',
+    name: 'note',
+    description: 'note',
     example: 'https://google.com/',
   })
   @IsString()
   @IsNotEmpty()
-  link: string;
+  note: string;
 
   @ApiProperty({
     name: 'date',
@@ -39,7 +39,7 @@ export class LinkDto {
   @IsNotEmpty()
   date: string;
 
-  constructor(partial: Partial<LinkEntity>) {
+  constructor(partial: Partial<NoteEntity>) {
     Object.assign(this, partial);
   }
 }

@@ -1,0 +1,9 @@
+@Post()
+@UseInterceptors(
+    FileInterceptor("document", {
+        dest: "./uploads",
+    })
+)
+uploadDocument(@UploadedFile() file) {
+    console.log(file.name);
+}
