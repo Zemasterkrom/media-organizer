@@ -5,6 +5,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { defaultIfEmpty, from, Observable } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { LinkDto } from '../dto/link.dto';
+import { SearchParams } from '../../validators/search-params';
 
 @Injectable()
 export class LinkDao {
@@ -19,18 +20,6 @@ export class LinkDao {
   ) {}
 
   /**
-   * Call mongoose method, call toJSON on each result and returns LinkModel[] or undefined
-   *
-   * @return {Observable<Link[] | void>}
-   */
-  all = (): Observable<Link[] | void> =>
-    from(this._linkModel.find()).pipe(
-      filter((docs: LinkDocument[]) => !!docs && docs.length > 0),
-      map((docs: LinkDocument[]) => docs.map((_: LinkDocument) => _.toJSON())),
-      defaultIfEmpty(undefined),
-    );
-
-  /**
    * Returns one Link of the list matching id in parameter
    *
    * @param {string} id of the Link in the db
@@ -43,6 +32,24 @@ export class LinkDao {
       map((doc: LinkDocument) => doc.toJSON()),
       defaultIfEmpty(undefined),
     );
+
+  /**
+   * Returns  Links of the list matching type in parameter
+   *
+   * @param {SearchParams} type or name of the Link in the db
+   *
+   * @return {Observable<Link | void>}
+   */
+  find = (query: SearchParams): Observable<Link[] | void> => {
+    const search = {};
+    if (query.name) search['name'] = { $regex: query.name, $options: 'i' };
+    if (query.type) search['type'] = { $regex: query.type, $options: 'i' };
+    return from(this._linkModel.find(search)).pipe(
+      filter((docs: LinkDocument[]) => !!docs && docs.length > 0),
+      map((docs: LinkDocument[]) => docs.map((_: LinkDocument) => _.toJSON())),
+      defaultIfEmpty([]),
+    );
+  };
 
   /**
    * Check if name already exists with index and add it in link list

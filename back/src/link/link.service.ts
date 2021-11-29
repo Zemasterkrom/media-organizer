@@ -10,6 +10,8 @@ import { LinkDao } from './dao/link.dao';
 import { LinkEntity } from './entities/link.entity';
 import { Link } from './link.schema';
 import { LinkDto } from './dto/link.dto';
+import { SearchParams } from '../validators/search-params';
+import * as moment from 'moment';
 
 @Injectable()
 export class LinkService {
@@ -21,12 +23,14 @@ export class LinkService {
   constructor(private readonly _linkDao: LinkDao) {}
 
   /**
-   * Returns all existing people in the list
+   * Returns links matching query in parameter
+   *
+   * @param {SearchParams} query of the Link
    *
    * @returns {Observable<LinkEntity[] | void>}
    */
-  All = (): Observable<LinkEntity[] | void> =>
-    this._linkDao.all().pipe(
+  find = (query: SearchParams): Observable<LinkEntity[] | void> =>
+    this._linkDao.find(query).pipe(
       filter((_: Link[]) => !!_),
       map((_: Link[]) => _.map((__: Link) => new LinkEntity(__))),
       defaultIfEmpty(undefined),
@@ -60,13 +64,15 @@ export class LinkService {
    *
    * @returns {Observable<LinkEntity>}
    */
-  add = (link: LinkDto): Observable<LinkEntity> =>
-    this._linkDao.add(link).pipe(
+  add = (link: LinkDto): Observable<LinkEntity> => {
+    link.date = moment().utc().format();
+    return this._linkDao.add(link).pipe(
       catchError((e) =>
         throwError(() => new UnprocessableEntityException(e.message)),
       ),
       map((_: Link) => new LinkEntity(_)),
     );
+  };
 
   /**
    * Update
@@ -117,9 +123,4 @@ export class LinkService {
             ),
       ),
     );
-
-  private _parseDate = (date: string): number => {
-    const dates = date.split('/');
-    return new Date(dates[2] + '/' + dates[1] + '/' + dates[0]).getTime();
-  };
 }

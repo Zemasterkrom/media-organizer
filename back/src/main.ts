@@ -9,14 +9,11 @@ import * as Config from 'config';
 import { AppConfig, SwaggerConfig } from './app.types';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { LinkModule } from './link/link.module';
-import {NoteModule} from "./note/note.module";
+import { NoteModule } from './note/note.module';
 
 async function bootstrap(config: AppConfig, swaggerConfig: SwaggerConfig) {
   // create NestJS application
-  const app = await NestFactory.create<NestFastifyApplication>(
-    AppModule,
-    new FastifyAdapter({ logger: true }),
-  );
+  const app = await NestFactory.create(AppModule);
 
   // enable CORS for NG Application's calls
   await app.enableCors({ origin: config.cors });

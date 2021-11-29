@@ -7,6 +7,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
   UseInterceptors,
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
@@ -28,6 +29,7 @@ import { HttpInterceptor } from '../interceptors/http.interceptor';
 import { NoteService } from './note.service';
 import { NoteEntity } from './entities/note.entity';
 import { NoteDto } from './dto/note.dto';
+import { SearchParams } from '../validators/search-params';
 
 @ApiTags('note')
 @Controller('note')
@@ -43,6 +45,8 @@ export class NoteController {
   /**
    * Handler to answer to GET /note/all route
    *
+   * @param {SearchParams} params list of route params to take note type/name
+   *
    * @returns Observable<NoteEntity[] | void>
    */
   @ApiOkResponse({
@@ -52,8 +56,8 @@ export class NoteController {
   })
   @ApiNoContentResponse({ description: 'No note exists in database' })
   @Get('/all')
-  findAll(): Observable<NoteEntity[] | void> {
-    return this._noteService.All();
+  find(@Query() query: SearchParams): Observable<NoteEntity[] | void> {
+    return this._noteService.find(query);
   }
 
   /**

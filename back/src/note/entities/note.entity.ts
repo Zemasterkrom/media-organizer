@@ -26,11 +26,6 @@ export class NoteEntity {
   @Type(() => String)
   note: string;
 
-  @ApiProperty({ name: 'type', description: 'type', example: 'type' })
-  @Expose()
-  @Type(() => String)
-  type: string;
-
   @ApiProperty({
     name: 'date',
     description: 'Created At',

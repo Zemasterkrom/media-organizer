@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString } from 'class-validator';
+import {IsNotEmpty, IsOptional, IsString} from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { NoteEntity } from '../entities/note.entity';
 
@@ -11,15 +11,6 @@ export class NoteDto {
   @IsString()
   @IsNotEmpty()
   name: string;
-
-  @ApiProperty({
-    name: 'type',
-    description: 'type',
-    example: 'type',
-  })
-  @IsString()
-  @IsNotEmpty()
-  type: string;
 
   @ApiProperty({
     name: 'note',
@@ -36,7 +27,7 @@ export class NoteDto {
     example: '2000/07/31',
   })
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   date: string;
 
   constructor(partial: Partial<NoteEntity>) {

@@ -10,6 +10,8 @@ import { NoteDao } from './dao/note.dao';
 import { NoteEntity } from './entities/note.entity';
 import { Note } from './note.schema';
 import { NoteDto } from './dto/note.dto';
+import { SearchParams } from '../validators/search-params';
+import * as moment from 'moment';
 
 @Injectable()
 export class NoteService {
@@ -23,10 +25,12 @@ export class NoteService {
   /**
    * Returns all existing notes in the list
    *
+   * @param {SearchParams} query of the note
+   *
    * @returns {Observable<NoteEntity[] | void>}
    */
-  All = (): Observable<NoteEntity[] | void> =>
-    this._noteDao.all().pipe(
+  find = (query: SearchParams): Observable<NoteEntity[] | void> =>
+    this._noteDao.find(query).pipe(
       filter((_: Note[]) => !!_),
       map((_: Note[]) => _.map((__: Note) => new NoteEntity(__))),
       defaultIfEmpty(undefined),
@@ -60,13 +64,15 @@ export class NoteService {
    *
    * @returns {Observable<NoteEntity>}
    */
-  add = (note: NoteDto): Observable<NoteEntity> =>
-    this._noteDao.add(note).pipe(
+  add = (note: NoteDto): Observable<NoteEntity> => {
+    note.date = moment().utc().format();
+    return this._noteDao.add(note).pipe(
       catchError((e) =>
         throwError(() => new UnprocessableEntityException(e.message)),
       ),
       map((_: Note) => new NoteEntity(_)),
     );
+  };
 
   /**
    * Update
@@ -117,9 +123,4 @@ export class NoteService {
             ),
       ),
     );
-
-  private _parseDate = (date: string): number => {
-    const dates = date.split('/');
-    return new Date(dates[2] + '/' + dates[1] + '/' + dates[0]).getTime();
-  };
 }

@@ -5,6 +5,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { defaultIfEmpty, from, Observable } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { NoteDto } from '../dto/note.dto';
+import { SearchParams } from '../../validators/search-params';
 
 @Injectable()
 export class NoteDao {
@@ -21,14 +22,19 @@ export class NoteDao {
   /**
    * Call mongoose method, call toJSON on each result and returns NoteModel[] or undefined
    *
+   * @param {SearchParams} query of the Note in the db
+   *
    * @return {Observable<Note[] | void>}
    */
-  all = (): Observable<Note[] | void> =>
-    from(this._noteModel.find()).pipe(
+  find = (query: SearchParams): Observable<Note[] | void> => {
+    const search = {};
+    if (query.name) search['name'] = { $regex: query.name, $options: 'i' };
+    return from(this._noteModel.find(search)).pipe(
       filter((docs: NoteDocument[]) => !!docs && docs.length > 0),
       map((docs: NoteDocument[]) => docs.map((_: NoteDocument) => _.toJSON())),
-      defaultIfEmpty(undefined),
+      defaultIfEmpty([]),
     );
+  };
 
   /**
    * Returns one Note of the list matching id in parameter

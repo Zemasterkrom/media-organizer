@@ -7,6 +7,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
@@ -17,6 +18,7 @@ import {
   ApiBadRequestResponse,
   ApiBody,
   ApiConflictResponse,
+  ApiConsumes,
   ApiCreatedResponse,
   ApiNoContentResponse,
   ApiNotFoundResponse,
@@ -30,6 +32,7 @@ import { LinkService } from './link.service';
 import { LinkEntity } from './entities/link.entity';
 import { LinkDto } from './dto/link.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { SearchParams } from '../validators/search-params';
 
 @ApiTags('link')
 @Controller('link')
@@ -43,19 +46,19 @@ export class LinkController {
   constructor(private readonly _linkService: LinkService) {}
 
   /**
-   * Handler to answer to GET /link/all route
+   * Handler to answer to GET /link/find?query route
    *
    * @returns Observable<NoteEntity[] | void>
    */
   @ApiOkResponse({
-    description: 'Returns an array of links',
+    description: 'Returns an array of links that match query',
     type: LinkEntity,
     isArray: true,
   })
   @ApiNoContentResponse({ description: 'No link exists in database' })
   @Get('/all')
-  findAll(): Observable<LinkEntity[] | void> {
-    return this._linkService.All();
+  find(@Query() query: SearchParams): Observable<LinkEntity[] | void> {
+    return this._linkService.find(query);
   }
 
   /**
@@ -112,16 +115,6 @@ export class LinkController {
   @Post('add')
   add(@Body() linkDto: LinkDto): Observable<LinkEntity> {
     return this._linkService.add(linkDto);
-  }
-
-  @Post('doc')
-  @UseInterceptors(
-    FileInterceptor('document', {
-      dest: './uploads',
-    }),
-  )
-  uploadDocument(@UploadedFile() file): Observable<string> {
-    return file;
   }
 
   /**

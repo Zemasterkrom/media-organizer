@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString } from 'class-validator';
+import {IsNotEmpty, IsOptional, IsString} from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { LinkEntity } from '../entities/link.entity';
 
@@ -36,7 +36,7 @@ export class LinkDto {
     example: '2000/07/31',
   })
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   date: string;
 
   constructor(partial: Partial<LinkEntity>) {

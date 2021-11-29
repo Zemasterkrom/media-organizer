@@ -31,13 +31,6 @@ export class Note {
   @Prop({
     type: String,
     required: true,
-    trim: true,
-  })
-  type: string;
-
-  @Prop({
-    type: String,
-    required: true,
     trim: false,
   })
   note: string;
