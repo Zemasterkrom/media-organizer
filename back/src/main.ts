@@ -10,7 +10,6 @@ import { AppConfig, SwaggerConfig } from './app.types';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { LinkModule } from './link/link.module';
 import { NoteModule } from './note/note.module';
-import {DocModule} from "./document/doc.module";
 
 async function bootstrap(config: AppConfig, swaggerConfig: SwaggerConfig) {
   // create NestJS application
@@ -36,12 +35,12 @@ async function bootstrap(config: AppConfig, swaggerConfig: SwaggerConfig) {
     .build();
 
   // create swagger document
-  const apiDocument = SwaggerModule.createDocument(app, options, {
-    include: [LinkModule, NoteModule, DocModule],
+  const linkDocument = SwaggerModule.createDocument(app, options, {
+    include: [LinkModule, NoteModule],
   });
 
   // setup swagger module
-  SwaggerModule.setup(swaggerConfig.path, app, apiDocument);
+  SwaggerModule.setup(swaggerConfig.path, app, linkDocument);
 
   // launch server
   await app.listen(config.port, config.host);
