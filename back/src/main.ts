@@ -10,6 +10,7 @@ import { AppConfig, SwaggerConfig } from './app.types';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { LinkModule } from './link/link.module';
 import { NoteModule } from './note/note.module';
+import {DocModule} from "./document/doc.module";
 
 async function bootstrap(config: AppConfig, swaggerConfig: SwaggerConfig) {
   // create NestJS application
@@ -36,7 +37,7 @@ async function bootstrap(config: AppConfig, swaggerConfig: SwaggerConfig) {
 
   // create swagger document
   const linkDocument = SwaggerModule.createDocument(app, options, {
-    include: [LinkModule, NoteModule],
+    include: [LinkModule, NoteModule, DocModule],
   });
 
   // setup swagger module
