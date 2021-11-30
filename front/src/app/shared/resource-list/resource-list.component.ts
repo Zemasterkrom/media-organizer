@@ -64,10 +64,9 @@ export class ResourceListComponent {
   @Input()
   private readonly _dataSource: MatTableDataSource<Resource>;
 
-
   /**
    * Constructeur de ResourceListComponent
-   * @param _service Service de base pour les URL
+   * @param _service Service de base
    * @param _sanitizer Permet de filtrer les données et notamment autoriser (pour les contenus HTML)
    */
   constructor(private _service: BaseService, private _sanitizer: DomSanitizer) {
@@ -125,7 +124,7 @@ export class ResourceListComponent {
    */
   @Input()
   set resources(value: ResourceList) {
-    this._resources = value;
+    this._resources = Object.assign([] as ResourceList,value);
     this._dataSource.data = this._resources;
   }
 
@@ -182,7 +181,30 @@ export class ResourceListComponent {
    * Assurer que la donnée fournie est autorisée à être exécutée
    * @param resource Resource contnenant les données
    */
-  trust(resource: Resource): string | SafeHtml {
+  trust(resource: Resource): SafeHtml {
     return this._sanitizer.bypassSecurityTrustHtml(<string>resource.descriptor);
+  }
+
+  /**
+   * Mettre à jour le service à utiliser pour la gestion des ressources
+   * @param service Service à utiliser
+   */
+  @Input()
+  set service(service: BaseService) {
+    this._service = service;
+  }
+
+  /**
+   * Supprimer une ressource
+   * @param resource Ressource à supprimer
+   */
+  delete(resource: Resource) {
+    let id = resource && (resource.id !== undefined && resource.id >= 0) ? resource.id : -1;
+    let deletedId = this._service.deleteOne(id);
+
+    if (deletedId >= 0) {
+      this._resources.splice(deletedId, 1);
+      this._dataSource.data = this._resources;
+    }
   }
 }

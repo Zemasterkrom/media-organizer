@@ -1,8 +1,9 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {Component, EventEmitter, Input} from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {CustomValidators} from "../CustomValidators";
 import {Note} from "../../types/note.type";
 import {FormComponent} from "../form.component";
+import {NoteService} from "../../services/note.service";
 
 @Component({
   selector: 'note-form',
@@ -12,7 +13,7 @@ import {FormComponent} from "../form.component";
 /**
  * Formulaire de note. Une note est une ressource textuelle simple.
  */
-export class NoteFormComponent extends FormComponent  {
+export class NoteFormComponent extends FormComponent {
   /**
    * Modèle d'une note du formulaire
    * @private
@@ -28,8 +29,8 @@ export class NoteFormComponent extends FormComponent  {
   /**
    * Constructeur de NoteFormComponent
    */
-  constructor() {
-    super();
+  constructor(private _noteService: NoteService) {
+    super(_noteService);
     this._model = {} as Note;
     this._submit$ = new EventEmitter<Note>();
     this._form = this._buildForm();
@@ -52,21 +53,6 @@ export class NoteFormComponent extends FormComponent  {
   }
 
   /**
-   * Emettre un évènement d'envoi pour la ressource vidéo en ligne
-   */
-  submit(): void {
-    this._submit$.emit();
-  }
-
-  /**
-   * Returns private property _submit$
-   */
-  @Output('submit')
-  get submit$(): EventEmitter<Note> {
-    return this._submit$;
-  }
-
-  /**
    * Construire le formulaire avec ses validations pour une note simple
    * @protected
    */
@@ -81,4 +67,28 @@ export class NoteFormComponent extends FormComponent  {
     })
   }
 
+  /**
+   * Ajouter une note
+   * @param note Note
+   */
+  addNote(note: Note) {
+    if (this._noteService.addOne(note)) {
+      this._baseService.goBack();
+    } else {
+      this._error = "Une note avec le même nom existe déjà";
+    }
+  }
+
+  /**
+   * Ajouter une note
+   * @param id Identifiant
+   * @param note Note
+   */
+  updateNote(id: number, note: Note) {
+    if (this._noteService.updateOne(id, note)) {
+      this._baseService.goBack();
+    } else {
+      this._error = "Une note avec le même nom existe déjà";
+    }
+  }
 }

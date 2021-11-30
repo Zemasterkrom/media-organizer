@@ -1,8 +1,10 @@
 import {Note} from "./note.type";
-import {Link} from "./link.type";
+import {Link, LinkType} from "./link.type";
+import {FileDocument, FileDocumentType} from "./file-document.type";
 
-export type Resource = (Note | File | Link) & CommonResource;
-export type ResourceList = ((Note & CommonResource)[] | (File & CommonResource)[] |(Link & CommonResource)[]);
+export type Resource = (Note | FileDocument | Link) & CommonResource;
+export type Type = (LinkType | FileDocumentType);
+export type ResourceList = ((Note & CommonResource)[] | (FileDocument & CommonResource)[] |(Link & CommonResource)[]);
 
 export type CommonResource = {
   id?: number,

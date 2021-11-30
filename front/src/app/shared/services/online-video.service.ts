@@ -2,6 +2,8 @@ import {Injectable} from '@angular/core';
 import {BaseService} from "./base.service";
 import {Link, LinkType} from "../types/link.type";
 import {LINKS} from "../../_static/links";
+import {Router} from "@angular/router";
+import {Location} from "@angular/common";
 
 @Injectable({
   providedIn: 'root'
@@ -11,38 +13,26 @@ import {LINKS} from "../../_static/links";
  */
 export class OnlineVideoService extends BaseService {
   /**
-   * Lien par défaut
-   * @private
-   */
-  private readonly _defaultOnlineVideo: Link;
-
-  /**
-   * Liens
-   * @private
-   */
-  private readonly _onlineVideos: Link[];
-
-  /**
    * Constructeur de OnlineVideoService
    */
-  constructor() {
-    super();
+  constructor(private _onlineVideoRouter: Router, private _onlineVideoLocation: Location) {
+    super(_onlineVideoRouter, _onlineVideoLocation);
     this.buildService("links");
-    this._defaultOnlineVideo = {
+    super.resources = LINKS;
+    super.defaultResource = {
       id: -1,
       name: "Vidéo non trouvée",
       type: LinkType.YouTube,
       url: "",
       date: new Date(2011, 11, 20)
     };
-    this._onlineVideos = LINKS;
   }
 
   /**
    * Récupérer toutes les vidéos en ligne
    */
   fetch(): Link[] {
-    return this._onlineVideos;
+    return <Link[]>super.fetch();
   }
 
   /**
@@ -50,9 +40,7 @@ export class OnlineVideoService extends BaseService {
    * @param type Type de recherche (YouTube/Dailymotion)
    */
   fetchByType(type: LinkType): Link[] {
-    return this._onlineVideos.filter(link => {
-      return link.type === type;
-    })
+    return []
   }
 
   /**
@@ -60,47 +48,27 @@ export class OnlineVideoService extends BaseService {
    * @param id Identifiant
    */
   fetchOne(id: number): Link {
-    return this._onlineVideos[id] || this._defaultOnlineVideo;
+    return <Link>super.fetchOne(id);
   }
 
   /**
    * Ajouter une nouvelle vidéo
-   * @param video Nouvelle vidéo
+   * @param newVideo Nouvelle vidéo
    */
-  addOne(video: Link): boolean {
-    if (!this._onlineVideos.find(link => {
-      return link.name === video.name;
+  addOne(newVideo: Link): number {
+    let maxId = 0;
+    if (!(<Link[]>super.resources).find((video: Link) => {
+      if (video.id && video.id > maxId) {
+        maxId = video.id + 1
+      }
+      return video.name === newVideo.name || video.url === newVideo.url;
     })) {
-      this._onlineVideos.concat(video);
-      return true;
+      newVideo.id = maxId;
+      newVideo.date = new Date(Date.now());
+      super.resources.push(newVideo);
+      return super.resources.length - 1;
     }
 
-    return false;
-  }
-
-  /**
-   * Mettre à jour une vidéo en ligne
-   * @param id Identifiant
-   * @param video Nouvelle vidéo
-   */
-  updateOne(id: number, video: Link): boolean {
-    if (this._onlineVideos[id]) {
-      this._onlineVideos[id] = video;
-      return true;
-    }
-
-    return false;
-  }
-
-  /**
-   * Supprimer une vidéo en ligne
-   * @param id Identifiant
-   */
-  deleteOne(id: number): boolean {
-    if (this._onlineVideos[id]) {
-      delete this._onlineVideos[id]
-      return true;
-    }
-    return false;
+    return -1;
   }
 }

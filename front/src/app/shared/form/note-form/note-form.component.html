@@ -19,6 +19,10 @@
 </mat-dialog-content>
 
 <mat-dialog-actions>
+  <mat-error *ngIf="error">
+    {{error}}
+  </mat-error>
   <button mat-button type="button" (click)="cancel()">Annuler</button>
-  <button mat-button color="primary" type="submit" [disabled]="form.invalid">Ajouter</button>
+  <button *ngIf="isUpdateMode"  mat-button color="primary" type="submit" [disabled]="form.invalid" (click)="updateNote(form.get('id')?.value, form.value)">Mettre à jour la note</button>
+  <button *ngIf="!isUpdateMode"  mat-button color="primary" type="submit" [disabled]="form.invalid" (click)="addNote(form.value)">Ajouter la note</button>
 </mat-dialog-actions>

@@ -1,16 +1,18 @@
 import {Pipe, PipeTransform} from '@angular/core';
 import {formatDate} from "@angular/common";
 import {Resource} from "../types/any.type";
+import {MatTableDataSource} from "@angular/material/table";
 
 @Pipe({
-  name: 'format'
+  name: 'formatDataSource'
 })
 /**
  * Pipe permettant de transformer les entrées des ressources dans le format souhaité
  */
-export class FormatPipe implements PipeTransform {
-  transform(resources: Resource[], ...args: any[]): Resource[] {
-    let newResources = (resources && Object.keys(resources[0]) ? resources : [] as Resource[]);
+export class FormatDataSourcePipe implements PipeTransform {
+  transform(resources: MatTableDataSource<Resource>, ...args: any[]): MatTableDataSource<Resource> {
+    let resourcesData = resources.data;
+    let newResources = (resources && Object.keys(resourcesData[0]) ? resourcesData : [] as Resource[]);
 
     if (newResources.length) {
       newResources.map((resource: Resource) => {
@@ -18,6 +20,7 @@ export class FormatPipe implements PipeTransform {
       });
     }
 
+    resources.data = newResources;
     return resources;
   }
 }

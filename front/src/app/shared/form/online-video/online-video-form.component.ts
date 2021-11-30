@@ -3,6 +3,7 @@ import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {CustomValidators} from "../CustomValidators";
 import {FormComponent} from "../form.component";
 import {Link} from "../../types/link.type";
+import {OnlineVideoService} from "../../services/online-video.service";
 
 @Component({
   selector: 'online-video-form',
@@ -13,7 +14,7 @@ import {Link} from "../../types/link.type";
 /**
  * Formulaire pour une vidéo en ligne YouTube/Dailymotion
  */
-export class OnlineVideoFormComponent extends FormComponent  {
+export class OnlineVideoFormComponent extends FormComponent {
 
   /**
    * Modèle du formulaire pour une vidéo YouTube/Dailymotion
@@ -30,8 +31,8 @@ export class OnlineVideoFormComponent extends FormComponent  {
   /**
    * Constructeur de OnlineVideoFormComponent
    */
-  constructor() {
-    super();
+  constructor(private _onlineVideoService: OnlineVideoService) {
+    super(_onlineVideoService);
     this._model = {} as Link;
     this._submit$ = new EventEmitter<Link>();
     this._form = this._buildForm();
@@ -72,6 +73,31 @@ export class OnlineVideoFormComponent extends FormComponent  {
         Validators.required, CustomValidators.videoUrl
       ]))
     })
+  }
+
+  /**
+   * Ajouter une vidéo
+   * @param video Vidéo
+   */
+  addOnlineVideo(video: Link) {
+    if (this._onlineVideoService.addOne(video)) {
+      this._baseService.goBack();
+    } else {
+      this._error = "La vidéo que vous tentez d'enregistrer existe déjà";
+    }
+  }
+
+  /**
+   * Ajouter une vidéo
+   * @param id Identifiant
+   * @param video Vidéo
+   */
+  updateOnlineVideo(id: number, video: Link) {
+    if (this._onlineVideoService.updateOne(id, video)) {
+      this._baseService.goBack();
+    } else {
+      this._error = "Une vidéo avec le même contenu existe déjà";
+    }
   }
 
 }

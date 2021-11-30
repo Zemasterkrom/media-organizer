@@ -1,5 +1,6 @@
-import {Component, EventEmitter, Output} from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {FormGroup} from "@angular/forms";
+import {BaseService} from "../services/base.service";
 
 @Component({
   template: ''
@@ -15,25 +16,25 @@ export abstract class FormComponent {
   protected readonly _isUpdateMode: boolean;
 
   /**
-   * Emetteur d'événement d'annulation
-   * @protected
-   */
-  protected readonly _cancel$: EventEmitter<void>;
-
-  /**
    * Formulaire et validations associées
    * @protected
    */
   protected _form: FormGroup;
 
   /**
+   * Erreur affichée en cas d'erreur d'enregistrement
+   * @protected
+   */
+  protected _error: string;
+
+  /**
    * Constructeur basique d'un formulaire
    * @protected Chaque formulaire a des validations différentes donc des composants différents
    */
-  protected constructor() {
+  protected constructor(protected _baseService:BaseService) {
     this._isUpdateMode = false;
-    this._cancel$ = new EventEmitter<void>();
     this._form = new FormGroup({});
+    this._error = "";
   }
 
   /**
@@ -51,15 +52,26 @@ export abstract class FormComponent {
   }
 
   /**
+   * Obtenir l'erreur
+   */
+  get error(): string {
+    return this._error;
+  }
+
+  /**
+   * Mettre à jour l'erreur
+   * @param error Erreur
+   */
+  @Input()
+  set error(error: string) {
+    this._error = error;
+  }
+
+  /**
    * Emettre un évènement d'annulation pour retourner à l'accueil
    */
   cancel(): void {
-    this._cancel$.emit();
-  }
-
-  @Output('cancel')
-  get cancel$(): EventEmitter<void> {
-    return this._cancel$;
+    this._baseService.goBack();
   }
 
   /**
