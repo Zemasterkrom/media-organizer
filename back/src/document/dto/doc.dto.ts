@@ -1,6 +1,10 @@
 import {IsNotEmpty, IsOptional, IsString} from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { DocEntity } from '../entities/doc.entity';
+import multer from "multer";
+import {UploadedFile} from "@nestjs/common";
+
+let uploadedFile = UploadedFile();
 
 export class DocDto {
   @ApiProperty({
@@ -20,6 +24,13 @@ export class DocDto {
   @IsString()
   @IsNotEmpty()
   type: string;
+
+  @ApiProperty({
+    name: 'file',
+    type: 'string',
+    format: 'binary',
+  })
+  file: Express.Multer.File;
 
   @ApiProperty({
     name: 'path',

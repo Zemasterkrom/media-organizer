@@ -34,7 +34,6 @@ import { DocEntity } from '../document/entities/Doc.entity';
 import { SearchParams } from '../validators/search-params';
 import { diskStorage } from 'multer';
 import { editFileName } from '../interceptors/file.interceptor';
-import { LinkDto } from '../link/dto/link.dto';
 
 @ApiTags('document')
 @Controller('document')
@@ -96,6 +95,8 @@ export class DocController {
    * Handler to answer to POST /Doc/add route
    *
    * @param DocDto data to create
+   *
+   * @UploadedFile file to upload
    *
    * @returns Observable<DocEntity>
    */
