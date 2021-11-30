@@ -1,8 +1,8 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
-import {CustomValidators} from "../form/CustomValidators";
-import {FormComponent} from "../form/form.component";
-import {Link} from "../types/link.type";
+import {CustomValidators} from "../CustomValidators";
+import {FormComponent} from "../form.component";
+import {Link} from "../../types/link.type";
 
 @Component({
   selector: 'online-video-form',

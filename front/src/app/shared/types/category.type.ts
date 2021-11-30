@@ -1,4 +1,5 @@
 export type Category = {
   name: string,
-  icon: string
+  icon: string,
+  href: string
 }

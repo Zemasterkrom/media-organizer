@@ -1,0 +1,24 @@
+table {
+  width: 100%;
+}
+
+tr.list-row {
+  height: 0;
+}
+
+.resource-row td {
+  border: 0;
+}
+
+.resource-detail {
+  overflow: hidden;
+  display: flex;
+}
+
+tr.resource-row:not(.expanded-resource-row):hover {
+  background: whitesmoke;
+}
+
+tr.resource-row:not(.expanded-resource-row):active {
+  background: #efefef;
+}

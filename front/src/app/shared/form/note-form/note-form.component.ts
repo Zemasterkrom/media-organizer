@@ -1,8 +1,8 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
-import {CustomValidators} from "../form/CustomValidators";
-import {Note} from "../types/note.type";
-import {FormComponent} from "../form/form.component";
+import {CustomValidators} from "../CustomValidators";
+import {Note} from "../../types/note.type";
+import {FormComponent} from "../form.component";
 
 @Component({
   selector: 'note-form',

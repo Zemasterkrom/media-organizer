@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import {LOCALE_ID, NgModule} from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
@@ -15,12 +15,22 @@ import {MatButtonModule} from "@angular/material/button";
 import { AddResourceComponent } from './add-resource/add-resource.component';
 import {MatTabsModule} from "@angular/material/tabs";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
-import { NoteFormComponent } from './shared/note-form/note-form.component';
+import { NoteFormComponent } from './shared/form/note-form/note-form.component';
 import {ReactiveFormsModule} from "@angular/forms";
 import {MatDialogModule} from "@angular/material/dialog";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatInputModule} from "@angular/material/input";
-import { OnlineVideoFormComponent } from './shared/online-video/online-video-form.component';
+import { OnlineVideoFormComponent } from './shared/form/online-video/online-video-form.component';
+import { ResourceListComponent } from './shared/resource-list/resource-list.component';
+import {MatTableModule} from "@angular/material/table";
+import { NoteListComponent } from './items-list/note-list/note-list.component';
+import {NumkeysPipe} from "./shared/pipes/numkeys.pipe";
+import {KeysPipe} from "./shared/pipes/keys.pipe";
+import {FormatPipe} from "./shared/pipes/format.pipe";
+import {registerLocaleData} from "@angular/common";
+import localeFr from "@angular/common/locales/fr";
+import {OnlineVideoListComponent} from "./items-list/online-video-list/online-video-list.component";
+registerLocaleData(localeFr)
 
 @NgModule({
   declarations: [
@@ -29,7 +39,14 @@ import { OnlineVideoFormComponent } from './shared/online-video/online-video-for
     CategoryCardComponent,
     AddResourceComponent,
     NoteFormComponent,
-    OnlineVideoFormComponent
+    OnlineVideoFormComponent,
+    ResourceListComponent,
+    OnlineVideoListComponent,
+    NoteListComponent,
+    NoteListComponent,
+    NumkeysPipe,
+    KeysPipe,
+    FormatPipe
   ],
   imports: [
     BrowserModule,
@@ -46,9 +63,12 @@ import { OnlineVideoFormComponent } from './shared/online-video/online-video-for
     ReactiveFormsModule,
     MatDialogModule,
     MatFormFieldModule,
-    MatInputModule
+    MatInputModule,
+    MatTableModule
   ],
-  providers: [],
+  providers: [
+    {provide: LOCALE_ID, useValue: 'fr-FR'}
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

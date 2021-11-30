@@ -24,5 +24,8 @@ export class AppComponent {
     this._matIconRegistry.addSvgIcon('note', this._domSanitizer.bypassSecurityTrustResourceUrl('assets/note.svg'));
     this._matIconRegistry.addSvgIcon('icon', this._domSanitizer.bypassSecurityTrustResourceUrl('/assets/icon.svg'));
     this._matIconRegistry.addSvgIcon('add', this._domSanitizer.bypassSecurityTrustResourceUrl('/assets/library_add.svg'));
+    this._matIconRegistry.addSvgIcon('edit', this._domSanitizer.bypassSecurityTrustResourceUrl('/assets/edit.svg'));
+    this._matIconRegistry.addSvgIcon('delete', this._domSanitizer.bypassSecurityTrustResourceUrl('/assets/delete.svg'));
+    this._matIconRegistry.addSvgIcon('preview', this._domSanitizer.bypassSecurityTrustResourceUrl('/assets/preview.svg'));
   }
 }

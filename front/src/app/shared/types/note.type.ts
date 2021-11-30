@@ -1,6 +1,10 @@
+import {CommonResource} from "./any.type";
+
 export type Note = {
-  id: bigint,
-  name: string,
-  content: string,
-  date: Date
-}
+  content: string
+} & CommonResource;
+
+export var NOTE_KEYS = {
+  name: "Nom",
+  dateAsString: "Date d'ajout"
+};

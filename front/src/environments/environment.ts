@@ -2,12 +2,12 @@
 // `ng build` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 
-export const environment = {
+export const environment: any = {
   production: false,
   frontend: {
     protocol: 'http',
-    host: '0.0.0.0',
-    port: '3000',
+    host: 'localhost',
+    port: '4200',
     endpoints: {
       home: '/media-organizer',
 
