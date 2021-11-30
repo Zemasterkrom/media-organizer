@@ -32,6 +32,8 @@ chrome-profiler-events*.json
 .history/*
 
 # misc
+package.json
+package-lock.json
 .eslintrc.js
 /.sass-cache
 /connect.lock
