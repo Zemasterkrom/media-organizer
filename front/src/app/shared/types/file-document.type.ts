@@ -19,3 +19,7 @@ export const FILE_DOCUMENT_KEYS = {
   dateAsString: "Date d'ajout"
 };
 
+export enum Errors {
+  NOT_FOUND = "Le fichier cherché n'existe pas",
+  ALREADY_EXISTS = "Le fichier que vous tentez d'enregistrer existe déjà"
+}

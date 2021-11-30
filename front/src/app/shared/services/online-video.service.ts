@@ -71,4 +71,35 @@ export class OnlineVideoService extends BaseService {
 
     return -1;
   }
+
+  /**
+   * Mettre à jour une vidéo
+   * @param id Identifiant
+   * @param res Nouvelle vidéo
+   */
+  updateOne(id: number | undefined, res: Link): number {
+    let foundIndexWithName = this.findObjectIndexByName(res.name);
+    let foundIndexWithUrl = this.findObjectIndexByUrl(res.url);
+    let foundIndex = this.findObjectIndex(id);
+
+    if (foundIndex >= 0 && (foundIndexWithName < 0 && foundIndexWithUrl < 0)) {
+      res.id = super.resources[foundIndex].id;
+      super.resources[foundIndex] = res;
+
+      return foundIndex;
+    }
+
+
+    return -1;
+  }
+
+  /**
+   * Trouver l'index dans le tableau d'une vidéo
+   * @param url URL de la vidéo
+   */
+  findObjectIndexByUrl(url: string): number {
+    return (<Link[]>super.resources).findIndex((res: Link) => {
+      return res.url === url;
+    });
+  }
 }

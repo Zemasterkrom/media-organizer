@@ -16,7 +16,9 @@ export class FormatDataSourcePipe implements PipeTransform {
 
     if (newResources.length) {
       newResources.map((resource: Resource) => {
-        resource.dateAsString = formatDate(resource.date, "yyyy/MM/dd", "fr-FR");
+        if (resource.date) {
+          resource.dateAsString = formatDate(resource.date, "yyyy/MM/dd", "fr-FR");
+        }
       });
     }
 

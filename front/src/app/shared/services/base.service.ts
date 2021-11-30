@@ -51,6 +51,10 @@ export class BaseService {
     return this;
   }
 
+  getBaseUrl() {
+    return this._urls.all ? this._urls.all : "";
+  }
+
   /**
    * Obtenir l'URL de vue d'un item
    * @param id Identifiant d'un item
@@ -76,11 +80,11 @@ export class BaseService {
   }
 
   /**
-   * Naviguer sur une autre URL
+   * Naviguer sur une autre URL par une route définie
    * @param url URL sur laquelle le navigateur doit être redirigé
    */
-  navigateByUrl(url: string) {
-    this._router.navigateByUrl(url);
+  navigateByRoute(url: string) {
+    this._router.navigateByUrl(url.replace(`${environment.frontend.protocol}://${environment.frontend.host}:${environment.frontend.port}/`, ''));
   }
 
   /**
@@ -88,6 +92,13 @@ export class BaseService {
    */
   goBack() {
     this._location.back();
+  }
+
+  /**
+   * Aller à l'accueil
+   */
+  navigateToHome() {
+    this._router.navigateByUrl('media-organizer');
   }
 
   /**
@@ -99,11 +110,25 @@ export class BaseService {
   }
 
   /**
+   * Obtenir la ressource par défaut
+   */
+  public get defaultResource() {
+    return this._defaultResource;
+  }
+
+  /**
    * Mettre à jour les ressources
    * @param res Ressources
    */
   public set resources(res: Resource[]) {
     this._resources = res;
+  }
+
+  /**
+   * Obtenir les ressources
+   */
+  public get resources() {
+    return this._resources;
   }
 
   /**
@@ -155,15 +180,18 @@ export class BaseService {
    * @param id Identifiant
    * @param res Nouvelle ressource
    */
-  updateOne(id: number, res: Resource): number {
+  updateOne(id: number | undefined, res: Resource): number {
+    let foundIndexWithName = this.findObjectIndexByName(res.name);
     let foundIndex = this.findObjectIndex(id);
 
-    if (foundIndex >= 0) {
+    if (foundIndex >= 0 && foundIndexWithName < 0) {
       res.id = this._resources[foundIndex].id;
       this._resources[foundIndex] = res;
+
+      return foundIndex;
     }
 
-    return foundIndex;
+    return -1;
   }
 
   /**
@@ -184,9 +212,19 @@ export class BaseService {
    * Trouver l'index dans le tableau d'un objet
    * @param id Identifiant de l'objet
    */
-  findObjectIndex(id: number): number {
+  findObjectIndex(id: number | undefined): number {
     return this._resources.findIndex((res: Resource) => {
       return res.id === id;
+    });
+  }
+
+  /**
+   * Trouver l'index dans le tableau d'un objet
+   * @param name Nom associé à l'objet
+   */
+  findObjectIndexByName(name: string | undefined): number {
+    return this._resources.findIndex((res: Resource) => {
+      return res.name === name;
     });
   }
 }

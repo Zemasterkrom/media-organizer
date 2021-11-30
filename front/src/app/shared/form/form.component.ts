@@ -13,7 +13,7 @@ export abstract class FormComponent {
    * Mode du formulaire (mise à jour ou ajout)
    * @protected
    */
-  protected readonly _isUpdateMode: boolean;
+  protected _isUpdateMode: boolean;
 
   /**
    * Formulaire et validations associées
@@ -42,6 +42,14 @@ export abstract class FormComponent {
    */
   get form(): FormGroup {
     return this._form;
+  }
+
+  /**
+   * Permet de savoir si l'on est en mode de mise à jour ou d'ajout
+   */
+  @Input()
+  set isUpdateMode(updateMode:boolean) {
+    this._isUpdateMode = updateMode;
   }
 
   /**

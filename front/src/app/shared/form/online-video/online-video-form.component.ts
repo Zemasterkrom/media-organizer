@@ -4,6 +4,7 @@ import {CustomValidators} from "../CustomValidators";
 import {FormComponent} from "../form.component";
 import {Link} from "../../types/link.type";
 import {OnlineVideoService} from "../../services/online-video.service";
+import {Errors} from "../../types/link.type";
 
 @Component({
   selector: 'online-video-form',
@@ -45,7 +46,16 @@ export class OnlineVideoFormComponent extends FormComponent {
    */
   @Input()
   set model(model: Link) {
+    let id = model.id !== undefined ? model.id : -1;
     this._model = model;
+
+    if (id < 0) {
+      this._error = "La vidéo cherchée n'existe pas";
+    } else {
+      this._model.id = id;
+      this._model.date = new Date(Date.now());
+      this._form.patchValue(this._model);
+    }
   }
 
   /**
@@ -80,10 +90,10 @@ export class OnlineVideoFormComponent extends FormComponent {
    * @param video Vidéo
    */
   addOnlineVideo(video: Link) {
-    if (this._onlineVideoService.addOne(video)) {
-      this._baseService.goBack();
+    if (this._onlineVideoService.addOne(video) >= 0) {
+      this._onlineVideoService.navigateToHome();
     } else {
-      this._error = "La vidéo que vous tentez d'enregistrer existe déjà";
+      this._error = Errors.ALREADY_EXISTS;
     }
   }
 
@@ -92,12 +102,16 @@ export class OnlineVideoFormComponent extends FormComponent {
    * @param id Identifiant
    * @param video Vidéo
    */
-  updateOnlineVideo(id: number, video: Link) {
-    if (this._onlineVideoService.updateOne(id, video)) {
-      this._baseService.goBack();
+  updateOnlineVideo(id: number | undefined, video: Link) {
+    if (this._onlineVideoService.updateOne(id, video) >= 0) {
+      this._onlineVideoService.navigateByRoute(this._onlineVideoService.getBaseUrl());
     } else {
-      this._error = "Une vidéo avec le même contenu existe déjà";
+      this._error = Errors.ALREADY_EXISTS;
     }
+  }
+
+  isNotFound(error: string) {
+    return error === Errors.NOT_FOUND;
   }
 
 }

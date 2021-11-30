@@ -24,6 +24,6 @@ export class AddResourceComponent {
    * Aller à l'accueil
    */
   goToHome() {
-    this._noteService.navigateByUrl('/media-organizer');
+    this._noteService.navigateByRoute('/media-organizer');
   }
 }

@@ -1,32 +1,46 @@
-<mat-dialog-content>
-  <form novalidate [formGroup]="form">
-    <table>
-      <tr>
-        <td>
-          <mat-form-field class="mat-form-field-wrapper">
-            <input autocomplete="disabled" matInput placeholder="Nom de la vidéo" formControlName="name" required name="name" />
-            <mat-error *ngIf="form.get('name')?.dirty && form.get('name')?.hasError('notEmpty')">
-              Le nom de la vidéo ne peut pas être <strong>vide</strong>
-            </mat-error>
-          </mat-form-field>
-          <mat-form-field>
-            <input autocomplete="disabled"  matInput placeholder="URL de la vidéo" formControlName="url" required name="url" />
-            <mat-error *ngIf="form.get('url')?.dirty &&  form.get('url')?.hasError('videoUrl')">
-              L'URL doit être un lien vers une vidéo YouTube ou Dailymotion
-            </mat-error>
-          </mat-form-field>
-        </td>
-      </tr>
-    </table>
-  </form>
+<div *ngIf="!(error && isUpdateMode && isNotFound(error))" class="center">
+  <h1 *ngIf="isUpdateMode">
+    Mettre à jour une vidéo
+  </h1>
+  <mat-dialog-content>
+    <form novalidate [formGroup]="form">
+      <table>
+        <tr>
+          <td>
+            <mat-form-field class="mat-form-field-wrapper">
+              <input autocomplete="disabled" matInput placeholder="Nom de la vidéo" formControlName="name" required
+                     name="name"/>
+              <mat-error *ngIf="form.get('name')?.dirty && form.get('name')?.hasError('notEmpty')">
+                Le nom de la vidéo ne peut pas être <strong>vide</strong>
+              </mat-error>
+            </mat-form-field>
+            <mat-form-field>
+              <input autocomplete="disabled" matInput placeholder="URL de la vidéo" formControlName="url" required
+                     name="url"/>
+              <mat-error *ngIf="form.get('url')?.dirty &&  form.get('url')?.hasError('videoUrl')">
+                L'URL doit être un lien vers une vidéo YouTube ou Dailymotion
+              </mat-error>
+            </mat-form-field>
+          </td>
+        </tr>
+      </table>
+    </form>
 
-</mat-dialog-content>
+  </mat-dialog-content>
 
-<mat-dialog-actions>
-  <mat-error *ngIf="error">
-    {{error}}
-  </mat-error>
-  <button mat-button type="button" (click)="cancel()">Annuler</button>
-  <button *ngIf="isUpdateMode"  mat-button color="primary" type="submit" [disabled]="form.invalid" (click)="updateOnlineVideo(form.get('id')?.value, form.value)">Mettre à jour la vidéo</button>
-  <button *ngIf="!isUpdateMode"  mat-button color="primary" type="submit" [disabled]="form.invalid" (click)="addOnlineVideo(form.value)">Ajouter la vidéo</button>
-</mat-dialog-actions>
+  <mat-dialog-actions>
+    <mat-error *ngIf="error">
+      {{error}}
+    </mat-error>
+    <button mat-button type="button" (click)="cancel()">Annuler</button>
+    <button *ngIf="isUpdateMode" mat-button color="primary" type="submit" [disabled]="form.invalid"
+            (click)="updateOnlineVideo(model?.id, form.value)">Mettre à jour la vidéo
+    </button>
+    <button *ngIf="!isUpdateMode" mat-button color="primary" type="submit" [disabled]="form.invalid"
+            (click)="addOnlineVideo(form.value)">Ajouter la vidéo
+    </button>
+  </mat-dialog-actions>
+</div>
+<div *ngIf="error && isUpdateMode && isNotFound(error)" class="center">
+  <h1>La vidéo recherchée pour modification n'existe pas</h1>
+</div>

@@ -30,6 +30,8 @@ import {registerLocaleData} from "@angular/common";
 import localeFr from "@angular/common/locales/fr";
 import {OnlineVideoListComponent} from "./items-list/online-video-list/online-video-list.component";
 import {FormatDataSourcePipe} from "./shared/pipes/format-data-source.pipe";
+import { UpdateNoteFormComponent } from './shared/form/note-form/update-note-form.component';
+import {UpdateOnlineVideoFormComponent} from "./shared/form/online-video/update-online-video-form.component";
 
 registerLocaleData(localeFr)
 
@@ -47,7 +49,9 @@ registerLocaleData(localeFr)
     NoteListComponent,
     NumkeysPipe,
     KeysPipe,
-    FormatDataSourcePipe
+    FormatDataSourcePipe,
+    UpdateNoteFormComponent,
+    UpdateOnlineVideoFormComponent
   ],
   imports: [
     BrowserModule,
