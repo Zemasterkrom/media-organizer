@@ -9,7 +9,7 @@ export type ResourceList = ((Note & CommonResource)[] | (FileDocument & CommonRe
 export type CommonResource = {
   id?: string,
   name: string,
-  date: Date,
+  date?: Date,
   dateAsString?: string,
   descriptor?: string
 }

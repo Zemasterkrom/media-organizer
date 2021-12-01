@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input} from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {CustomValidators} from "../CustomValidators";
-import {Errors, Note} from "../../types/note.type";
+import {Errors, Note, removeUnwantedFields} from "../../types/note.type";
 import {FormComponent} from "../form.component";
 import {NoteService} from "../../services/note.service";
 import {HttpStatusCode} from "@angular/common/http";
@@ -61,12 +61,10 @@ export class NoteFormComponent extends FormComponent {
    */
   protected _buildForm(): FormGroup {
     return new FormGroup({
-      id: new FormControl(),
       name: new FormControl('', Validators.compose([
         Validators.required, CustomValidators.notEmpty
       ])),
-      content: new FormControl(),
-      date: new FormControl()
+      note: new FormControl()
     })
   }
 
@@ -75,8 +73,8 @@ export class NoteFormComponent extends FormComponent {
    * @param note Note
    */
   addNote(note: Note) {
-    this._noteService.addOne(note).subscribe(() => this._noteService.navigateToHome(), (error) => {
-      this._error = error.statusCode === HttpStatusCode.Conflict ? Errors.ALREADY_EXISTS : Errors.INTERNAL_ERROR;
+    this._noteService.addOne(removeUnwantedFields(note)).subscribe(() => this._noteService.navigateToHome(), (error) => {
+      this._error = error.statusCode === HttpStatusCode.Conflict || HttpStatusCode.UnprocessableEntity ? Errors.ALREADY_EXISTS : Errors.INTERNAL_ERROR;
     });
   }
 
@@ -86,11 +84,11 @@ export class NoteFormComponent extends FormComponent {
    * @param note Note
    */
   updateNote(id: string, note: Note) {
-    this._noteService.updateOne(id, note).subscribe(() => this._noteService.navigateByRoute(this._noteService.getBaseUrl()), (error) => {
-      this._error = error.statusCode === 409 ? Errors.ALREADY_EXISTS : Errors.INTERNAL_ERROR;
+    this._noteService.updateOne(id, removeUnwantedFields(note)).subscribe(() => this._noteService.navigateByRoute(this._noteService.getBaseUrl()), (error) => {
 
       switch (error.statusCode) {
         case HttpStatusCode.Conflict:
+        case HttpStatusCode.UnprocessableEntity:
           this._error = Errors.ALREADY_EXISTS;
           break;
         case HttpStatusCode.NotFound:

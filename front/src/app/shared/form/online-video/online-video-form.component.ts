@@ -5,6 +5,7 @@ import {FormComponent} from "../form.component";
 import {Errors, Link} from "../../types/link.type";
 import {OnlineVideoService} from "../../services/online-video.service";
 import {HttpStatusCode} from "@angular/common/http";
+import {removeUnwantedFields} from "../../types/link.type";
 
 @Component({
   selector: 'online-video-form',
@@ -71,7 +72,7 @@ export class OnlineVideoFormComponent extends FormComponent {
       name: new FormControl('', Validators.compose([
         Validators.required, CustomValidators.notEmpty
       ])),
-      url: new FormControl('', Validators.compose([
+      link: new FormControl('', Validators.compose([
         Validators.required, CustomValidators.videoUrl
       ]))
     })
@@ -83,7 +84,7 @@ export class OnlineVideoFormComponent extends FormComponent {
    */
   addOnlineVideo(video: Link) {
     this._onlineVideoService.addOne(video).subscribe(() => this._onlineVideoService.navigateToHome(), (error) => {
-      this._error = error.statusCode === HttpStatusCode.Conflict ? Errors.ALREADY_EXISTS : Errors.INTERNAL_ERROR;
+      this._error = error.statusCode === HttpStatusCode.Conflict || HttpStatusCode.UnprocessableEntity ? Errors.ALREADY_EXISTS : Errors.INTERNAL_ERROR;
     });
   }
 
@@ -93,11 +94,11 @@ export class OnlineVideoFormComponent extends FormComponent {
    * @param video Vidéo
    */
   updateOnlineVideo(id: string | undefined, video: Link) {
-    this._onlineVideoService.updateOne(id, video).subscribe(() => this._onlineVideoService.navigateByRoute(this._onlineVideoService.getBaseUrl()), (error) => {
-      this._error = error.statusCode === 409 ? Errors.ALREADY_EXISTS : Errors.INTERNAL_ERROR;
+    this._onlineVideoService.updateOne(id, removeUnwantedFields(video)).subscribe(() => this._onlineVideoService.navigateByRoute(this._onlineVideoService.getBaseUrl()), (error) => {
 
       switch (error.statusCode) {
         case HttpStatusCode.Conflict:
+        case HttpStatusCode.UnprocessableEntity:
           this._error = Errors.ALREADY_EXISTS;
           break;
         case HttpStatusCode.NotFound:

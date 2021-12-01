@@ -9,7 +9,7 @@ export enum FileDocumentType {
 }
 
 export type FileDocument = {
-  type: FileDocumentType,
+  type?: FileDocumentType,
   file: File,
 } & CommonResource;
 
@@ -24,4 +24,13 @@ export enum Errors {
   NOT_FOUND = "Le fichier cherché n'existe pas",
   ALREADY_EXISTS = "Le fichier que vous tentez d'enregistrer existe déjà",
   INTERNAL_ERROR = "Une erreur interne est survenue"
+}
+
+export function removeUnwantedFields(file: FileDocument) : FileDocument {
+  delete file.date;
+  delete file.type;
+  delete file.descriptor;
+  delete file.dateAsString;
+
+  return file;
 }
