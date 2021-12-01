@@ -1,7 +1,6 @@
-import {IsDate, IsDateString, IsNotEmpty, IsOptional, IsString} from 'class-validator';
-import { ApiProperty } from '@nestjs/swagger';
-import { LinkEntity } from '../entities/link.entity';
-import {Schema} from "mongoose";
+import {IsDateString, IsNotEmpty, IsOptional, IsString, IsUrl} from 'class-validator';
+import {ApiProperty} from '@nestjs/swagger';
+import {LinkEntity} from '../entities/link.entity';
 
 export class LinkDto {
   @ApiProperty({
@@ -28,8 +27,7 @@ export class LinkDto {
     description: 'link',
     example: 'https://www.youtube.com/embed/_oNK08LvZ-g',
   })
-  @IsString()
-  @IsNotEmpty()
+  @IsUrl()
   link: string;
 
   @ApiProperty({
@@ -38,6 +36,7 @@ export class LinkDto {
     example: new Date(Date.now()).toISOString(),
   })
   @IsDateString()
+  @IsOptional()
   date: string;
 
   constructor(partial: Partial<LinkEntity>) {

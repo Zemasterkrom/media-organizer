@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import {Logger, Module} from '@nestjs/common';
 
 import { LinkModule } from './link/link.module';
 import { MongooseModule } from '@nestjs/mongoose';
@@ -11,6 +11,7 @@ import { DocModule } from './document/doc.module';
     LinkModule,
     NoteModule,
     DocModule,
+    Logger,
     MongooseModule.forRoot(Config.get<string>('mongodb.uri')),
   ],
 })

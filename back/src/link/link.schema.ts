@@ -1,6 +1,6 @@
 import * as mongoose from 'mongoose';
-import { Document } from 'mongoose';
-import { Prop, raw, Schema, SchemaFactory } from '@nestjs/mongoose';
+import {Document} from 'mongoose';
+import {Prop, Schema, SchemaFactory} from '@nestjs/mongoose';
 
 export type LinkDocument = Link & Document;
 
@@ -39,12 +39,17 @@ export class Link {
     type: String,
     required: true,
     trim: true,
+    validate: function (link) {
+      return new RegExp("^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\\w\-]+)$").test(link) ||
+          new RegExp("^(?:(?:https?):)?(?:\/\/)?(?:www\.)?(?:(?:dailymotion\.com(?:\/embed)?\/video)|dai\.ly)\/([a-zA-Z0-9]+)(?:_[\w_-]+)?$").test(link);
+    }
   })
   link: string;
 
   @Prop({
     type: Date,
-    required: true,
+    required: false,
+    default: new Date(Date.now())
   })
   date: string;
 }

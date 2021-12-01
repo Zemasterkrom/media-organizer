@@ -8,17 +8,15 @@ import {
   Post,
   Put,
   Query,
-  UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
-import { Observable } from 'rxjs';
-import { HandlerParams } from '../validators/handler-params';
+import {Observable} from 'rxjs';
+import {HandlerParams} from '../validators/handler-params';
 
 import {
   ApiBadRequestResponse,
   ApiBody,
   ApiConflictResponse,
-  ApiConsumes,
   ApiCreatedResponse,
   ApiNoContentResponse,
   ApiNotFoundResponse,
@@ -27,12 +25,11 @@ import {
   ApiTags,
   ApiUnprocessableEntityResponse,
 } from '@nestjs/swagger';
-import { HttpInterceptor } from '../interceptors/http.interceptor';
-import { LinkService } from './link.service';
-import { LinkEntity } from './entities/link.entity';
-import { LinkDto } from './dto/link.dto';
-import { FileInterceptor } from '@nestjs/platform-express';
-import { SearchParams } from '../validators/search-params';
+import {HttpInterceptor} from '../interceptors/http.interceptor';
+import {LinkService} from './link.service';
+import {LinkEntity} from './entities/link.entity';
+import {LinkDto} from './dto/link.dto';
+import {SearchParams} from '../validators/search-params';
 
 @ApiTags('link')
 @Controller('link')
@@ -43,7 +40,8 @@ export class LinkController {
    * Class constructor
    * @param _linkService
    */
-  constructor(private readonly _linkService: LinkService) {}
+  constructor(private readonly _linkService: LinkService) {
+  }
 
   /**
    * Handler to answer to GET /link/find?query route
@@ -55,7 +53,7 @@ export class LinkController {
     type: LinkEntity,
     isArray: true,
   })
-  @ApiNoContentResponse({ description: 'No link exists in database' })
+  @ApiNoContentResponse({description: 'No link exists in database'})
   @Get('/all')
   find(@Query() query: SearchParams): Observable<LinkEntity[] | void> {
     return this._linkService.find(query);
@@ -75,7 +73,7 @@ export class LinkController {
   @ApiNotFoundResponse({
     description: 'Link with the given "id" doesn\'t exist in the database',
   })
-  @ApiBadRequestResponse({ description: 'Parameter provided is not good' })
+  @ApiBadRequestResponse({description: 'Parameter provided is not good'})
   @ApiUnprocessableEntityResponse({
     description: "The request can't be performed in the database",
   })
@@ -104,7 +102,7 @@ export class LinkController {
   @ApiConflictResponse({
     description: 'The link already exists in the database',
   })
-  @ApiBadRequestResponse({ description: 'Payload provided is not good' })
+  @ApiBadRequestResponse({description: 'Payload provided is not good'})
   @ApiUnprocessableEntityResponse({
     description: "The request can't be performed in the database",
   })
@@ -147,11 +145,11 @@ export class LinkController {
     type: String,
     allowEmptyValue: false,
   })
-  @ApiBody({ description: 'Payload to update a link', type: LinkDto })
+  @ApiBody({description: 'Payload to update a link', type: LinkDto})
   @Put('update/:id')
   update(
-    @Param() params: HandlerParams,
-    @Body() linkDto: LinkDto,
+      @Param() params: HandlerParams,
+      @Body() linkDto: LinkDto,
   ): Observable<LinkEntity> {
     return this._linkService.update(params.id, linkDto);
   }
@@ -169,7 +167,7 @@ export class LinkController {
   @ApiNotFoundResponse({
     description: 'Link with the given "id" doesn\'t exist in the database',
   })
-  @ApiBadRequestResponse({ description: 'Parameter provided is not good' })
+  @ApiBadRequestResponse({description: 'Parameter provided is not good'})
   @ApiUnprocessableEntityResponse({
     description: "The request can't be performed in the database",
   })

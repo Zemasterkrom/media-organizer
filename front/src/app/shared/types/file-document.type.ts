@@ -1,4 +1,5 @@
 import {CommonResource} from "./any.type";
+import {File} from "@angular/compiler-cli/src/ngtsc/file_system/testing/src/mock_file_system";
 
 export enum FileDocumentType {
   PDF = 'PDF',
@@ -9,7 +10,7 @@ export enum FileDocumentType {
 
 export type FileDocument = {
   type: FileDocumentType,
-  path: string,
+  file: File,
 } & CommonResource;
 
 export const FILE_DOCUMENT_KEYS = {

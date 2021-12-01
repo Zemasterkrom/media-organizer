@@ -1,15 +1,11 @@
-import { NestFactory } from '@nestjs/core';
-import { Logger, ValidationPipe } from '@nestjs/common';
-import {
-  FastifyAdapter,
-  NestFastifyApplication,
-} from '@nestjs/platform-fastify';
-import { AppModule } from './app.module';
+import {NestFactory} from '@nestjs/core';
+import {Logger, ValidationPipe} from '@nestjs/common';
+import {AppModule} from './app.module';
 import * as Config from 'config';
-import { AppConfig, SwaggerConfig } from './app.types';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { LinkModule } from './link/link.module';
-import { NoteModule } from './note/note.module';
+import {AppConfig, SwaggerConfig} from './app.types';
+import {DocumentBuilder, SwaggerModule} from '@nestjs/swagger';
+import {LinkModule} from './link/link.module';
+import {NoteModule} from './note/note.module';
 import {DocModule} from "./document/doc.module";
 
 async function bootstrap(config: AppConfig, swaggerConfig: SwaggerConfig) {
@@ -24,6 +20,7 @@ async function bootstrap(config: AppConfig, swaggerConfig: SwaggerConfig) {
     new ValidationPipe({
       whitelist: true,
       forbidNonWhitelisted: true,
+
     }),
   );
 
