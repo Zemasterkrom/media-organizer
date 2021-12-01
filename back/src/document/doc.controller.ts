@@ -35,6 +35,7 @@ import {SearchParams} from '../validators/search-params';
 import {diskStorage} from 'multer';
 import {editFileName} from '../interceptors/file.interceptor';
 import {DocAddDto} from "./dto/doc-add.dto";
+import {extname} from "path";
 
 @ApiTags('document')
 @Controller('document')
@@ -131,7 +132,8 @@ export class DocController {
     @Body() docAddDto: DocAddDto,
     @UploadedFile() file: Express.Multer.File,
   ) {
-    return this._docService.add(docAddDto, file.filename);
+    const ext = extname(file.originalname);
+    return this._docService.add(docAddDto, file.filename, ext);
   }
 
   /**

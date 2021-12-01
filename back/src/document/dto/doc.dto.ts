@@ -13,6 +13,15 @@ export class DocDto {
     name: string;
 
     @ApiProperty({
+        name: 'name',
+        description: 'Document name',
+        example: 'name',
+    })
+    @IsString()
+    @IsOptional()
+    type: string;
+
+    @ApiProperty({
         name: 'date',
         description: 'Last updated document date',
         example: new Date(Date.now()).toISOString(),

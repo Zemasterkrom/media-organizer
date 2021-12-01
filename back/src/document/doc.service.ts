@@ -60,9 +60,10 @@ export class DocService {
    * @param file filename
    * @returns {Observable<DocEntity>}
    */
-  add = (document: DocAddDto, file: string): Observable<DocEntity> => {
+  add = (document: DocAddDto, file: string, ext: string): Observable<DocEntity> => {
     document.date = moment().utc().format();
     document.path = file;
+    document.type = ext;
     return this._docDao.add(document).pipe(
       catchError((e) =>
         throwError(() => new UnprocessableEntityException(e.message)),
