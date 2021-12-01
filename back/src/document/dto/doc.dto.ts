@@ -1,7 +1,6 @@
-import {IsNotEmpty, IsOptional, IsString} from 'class-validator';
-import { ApiProperty } from '@nestjs/swagger';
-import { DocEntity } from '../entities/doc.entity';
-import multer from "multer";
+import {IsDateString, IsNotEmpty, IsOptional, IsString} from 'class-validator';
+import {ApiProperty} from '@nestjs/swagger';
+import {DocEntity} from '../entities/doc.entity';
 import {UploadedFile} from "@nestjs/common";
 
 let uploadedFile = UploadedFile();
@@ -44,9 +43,9 @@ export class DocDto {
   @ApiProperty({
     name: 'date',
     description: 'date',
-    example: '2000/07/31',
+    example: new Date(Date.now()).toDateString(),
   })
-  @IsString()
+  @IsDateString()
   @IsOptional()
   date: string;
 

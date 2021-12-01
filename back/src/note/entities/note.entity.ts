@@ -12,7 +12,7 @@ export class NoteEntity {
   @Type(() => String)
   id: string;
 
-  @ApiProperty({ name: 'name', description: 'name', example: 'name' })
+  @ApiProperty({ name: 'name', description: 'name', example: 'Default note' })
   @Expose()
   @Type(() => String)
   name: string;
@@ -20,7 +20,7 @@ export class NoteEntity {
   @ApiProperty({
     name: 'note',
     description: 'URL',
-    example: 'https://google.com/',
+    example: 'This is a default note',
   })
   @Expose()
   @Type(() => String)
@@ -29,7 +29,7 @@ export class NoteEntity {
   @ApiProperty({
     name: 'date',
     description: 'Created At',
-    example: '2021-11-27T13:41:48.229Z',
+    example: new Date(Date.now()),
   })
   @Expose()
   @Type(() => Date)

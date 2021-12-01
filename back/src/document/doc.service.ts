@@ -1,16 +1,11 @@
-import {
-  ConflictException,
-  Injectable,
-  NotFoundException,
-  UnprocessableEntityException,
-} from '@nestjs/common';
-import { DocDao } from './dao/doc.dao';
-import { SearchParams } from '../validators/search-params';
-import { catchError, defaultIfEmpty, Observable, of, throwError } from 'rxjs';
-import { filter, map, mergeMap } from 'rxjs/operators';
-import { Doc } from '../document/doc.schema';
-import { DocEntity } from './entities/doc.entity';
-import { DocDto } from './dto/doc.dto';
+import {ConflictException, Injectable, NotFoundException, UnprocessableEntityException,} from '@nestjs/common';
+import {DocDao} from './dao/doc.dao';
+import {SearchParams} from '../validators/search-params';
+import {catchError, defaultIfEmpty, Observable, of, throwError} from 'rxjs';
+import {filter, map, mergeMap} from 'rxjs/operators';
+import {Doc} from './doc.schema';
+import {DocEntity} from './entities/doc.entity';
+import {DocDto} from './dto/doc.dto';
 import * as moment from 'moment';
 
 @Injectable()

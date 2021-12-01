@@ -7,7 +7,7 @@ export const enum LinkType {
 
 export type Link = {
   type: LinkType,
-  url: string
+  link: string
 } & CommonResource;
 
 export const LINK_KEYS = {

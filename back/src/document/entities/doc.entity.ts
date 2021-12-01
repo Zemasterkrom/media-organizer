@@ -1,5 +1,5 @@
-import { Exclude, Expose, Type } from 'class-transformer';
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import {Exclude, Expose, Type} from 'class-transformer';
+import {ApiProperty} from '@nestjs/swagger';
 
 @Exclude()
 export class DocEntity {

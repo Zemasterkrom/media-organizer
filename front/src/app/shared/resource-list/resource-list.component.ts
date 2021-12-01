@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {Resource, ResourceList} from "../types/any.type";
 import {animate, state, style, transition, trigger} from "@angular/animations";
 import {MatTableDataSource} from "@angular/material/table";
@@ -20,7 +20,7 @@ import {DomSanitizer, SafeHtml} from "@angular/platform-browser";
 /**
  * Permet de construire un générateur de liste générique pour les items ajoutés
  */
-export class ResourceListComponent {
+export class ResourceListComponent implements OnChanges{
   /**
    * Colonnes à afficher
    * @protected
@@ -124,8 +124,13 @@ export class ResourceListComponent {
    */
   @Input()
   set resources(value: ResourceList) {
-    this._resources = Object.assign([] as ResourceList, value);
+    this._resources = value;
     this._dataSource.data = this._resources;
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.service) this._service = changes.service.currentValue;
+    if (changes.resources) this._dataSource.data = changes.resources.currentValue;
   }
 
   /**
@@ -190,6 +195,7 @@ export class ResourceListComponent {
    * @param resource Ressource à supprimer
    */
   delete(resource: Resource) {
+    console.log(this._service)
     this._service.deleteOne(resource.id as string)
       .subscribe((id: string) => {
         this._resources = <ResourceList>(this._resources as Resource[]).filter((res: Resource) => res.id !== id)

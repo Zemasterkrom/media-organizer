@@ -25,10 +25,23 @@ export class OnlineVideoListComponent extends ResourceListComponent {
     super.service = this.__onlineVideoService;
     this.__onlineVideoService.fetch().subscribe((resources: Link[]) => {
       resources.map((video: Link) => {
-        video.descriptor = "<iframe width=\"560\" height=\"315\" src=\"" + video.url + "\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture\" allowfullscreen></iframe>";
+        video.descriptor = "<iframe width=\"560\" height=\"315\" src=\"" + video.link + "\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture\" allowfullscreen></iframe>";
       });
       super.resources = resources;
     });
   }
 
+  /**
+   * Obtenir les colonnes à afficher
+   */
+  get columns(): {} {
+    return super.columns;
+  }
+
+  /**
+   * Obtenir le service à utiliser
+   */
+  get service(): OnlineVideoService {
+    return this.__onlineVideoService;
+  }
 }

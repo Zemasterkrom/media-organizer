@@ -24,16 +24,16 @@ import {
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
-import { HttpInterceptor } from '../interceptors/http.interceptor';
-import { DocService } from './doc.service';
-import { FileInterceptor } from '@nestjs/platform-express';
-import { HandlerParams } from '../validators/handler-params';
-import { Observable } from 'rxjs';
-import { DocDto } from './dto/doc.dto';
-import { DocEntity } from '../document/entities/Doc.entity';
-import { SearchParams } from '../validators/search-params';
-import { diskStorage } from 'multer';
-import { editFileName } from '../interceptors/file.interceptor';
+import {HttpInterceptor} from '../interceptors/http.interceptor';
+import {DocService} from './doc.service';
+import {FileInterceptor} from '@nestjs/platform-express';
+import {HandlerParams} from '../validators/handler-params';
+import {Observable} from 'rxjs';
+import {DocDto} from './dto/doc.dto';
+import {DocEntity} from './entities/doc.entity';
+import {SearchParams} from '../validators/search-params';
+import {diskStorage} from 'multer';
+import {editFileName} from '../interceptors/file.interceptor';
 
 @ApiTags('document')
 @Controller('document')

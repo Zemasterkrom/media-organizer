@@ -1,7 +1,7 @@
 import {CommonResource} from "./any.type";
 
 export type Note = {
-  content: string
+  note: string
 } & CommonResource;
 
 export var NOTE_KEYS = {

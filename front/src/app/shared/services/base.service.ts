@@ -83,7 +83,7 @@ export class BaseService {
    * @param id Identifiant d'un item
    */
   getViewUrl(id: number): string {
-    return this._urls.frontend.one ? this._urls.one.replace(":id", id) : "";
+    return this._urls.frontend.one ? this._urls.frontend.one.replace(":id", id) : "";
   }
 
   /**
@@ -91,7 +91,7 @@ export class BaseService {
    * @param id Identifiant d'un item
    */
   getEditUrl(id: number): string {
-    return this._urls.frontend.update ? this._urls.update.replace(":id", id) : "";
+    return this._urls.frontend.update ? this._urls.frontend.update.replace(":id", id) : "";
   }
 
   /**
@@ -199,6 +199,7 @@ export class BaseService {
    * @param id Identifiant
    */
   deleteOne(id: string | undefined): Observable<string> {
+    console.log(this._urls)
     return this._http.delete(this._urls.backend.delete.replace(':id', id))
       .pipe(
         map(() => id as string)

@@ -15,7 +15,7 @@
               </mat-error>
             </mat-form-field>
             <mat-form-field>
-              <input autocomplete="disabled" matInput placeholder="URL de la vidéo" formControlName="url" required
+              <input autocomplete="disabled" matInput placeholder="URL de la vidéo" formControlName="link" required
                      name="url"/>
               <mat-error *ngIf="form.get('url')?.dirty &&  form.get('url')?.hasError('videoUrl')">
                 L'URL doit être un lien vers une vidéo YouTube ou Dailymotion

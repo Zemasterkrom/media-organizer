@@ -1,12 +1,12 @@
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
-import { Injectable } from '@nestjs/common';
-import { DocDocument, Doc } from '../doc.schema';
-import { defaultIfEmpty, from, Observable } from 'rxjs';
-import { filter, map } from 'rxjs/operators';
-import { SearchParams } from '../../validators/search-params';
-import { DocDto } from '../dto/doc.dto';
-import { Link, LinkDocument } from '../../link/link.schema';
+import {InjectModel} from '@nestjs/mongoose';
+import {Model} from 'mongoose';
+import {Injectable} from '@nestjs/common';
+import {Doc, DocDocument} from '../doc.schema';
+import {defaultIfEmpty, from, Observable} from 'rxjs';
+import {filter, map} from 'rxjs/operators';
+import {SearchParams} from '../../validators/search-params';
+import {DocDto} from '../dto/doc.dto';
+import {Link} from '../../link/link.schema';
 
 @Injectable()
 export class DocDao {
@@ -37,7 +37,7 @@ export class DocDao {
   /**
    * Returns docs of the list matching type in parameter
    *
-   * @param {SearchParams} type/name of the doc in the db
+   * @param {SearchParams} query type/name of the doc in the db
    *
    * @return {Observable<Doc | void>}
    */
@@ -55,7 +55,7 @@ export class DocDao {
   /**
    * Check if name already exists with index and add it in doc list
    *
-   * @param {DocDto} doc to create
+   * @param {DocDto} document to create
    *
    * @return {Observable<Link>}
    */

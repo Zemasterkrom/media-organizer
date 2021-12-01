@@ -3,6 +3,7 @@ import {Note, NOTE_KEYS} from "../../shared/types/note.type";
 import {NoteService} from "../../shared/services/note.service";
 import {ResourceListComponent} from "../../shared/resource-list/resource-list.component";
 import {DomSanitizer} from "@angular/platform-browser";
+import {OnlineVideoService} from "../../shared/services/online-video.service";
 
 @Component({
   selector: 'note-list',
@@ -25,9 +26,23 @@ export class NoteListComponent extends ResourceListComponent {
     super.service = this.__noteService;
     this.__noteService.fetch().subscribe((resources: Note[]) => {
       resources.map((note: Note) => {
-        note.descriptor = note.content;
+        note.descriptor = note.note;
       });
       super.resources = resources;
     });
+  }
+
+  /**
+   * Obtenir les colonnes à afficher
+   */
+  get columns(): {} {
+    return super.columns;
+  }
+
+  /**
+   * Obtenir le service à utiliser
+   */
+  get service(): NoteService {
+    return this.__noteService;
   }
 }

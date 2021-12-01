@@ -19,7 +19,7 @@ export class OnlineVideoService extends BaseService {
    */
   constructor(private __http:HttpClient, private _onlineVideoRouter: Router, private _onlineVideoLocation: Location) {
     super(__http, _onlineVideoRouter, _onlineVideoLocation);
-    this.buildService("links");
+    super.buildService("links");
     super.defaultResource = Object.assign({}, LINKS[0]);
   }
 
