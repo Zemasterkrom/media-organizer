@@ -7,7 +7,7 @@ export type Type = (LinkType | FileDocumentType);
 export type ResourceList = ((Note & CommonResource)[] | (FileDocument & CommonResource)[] |(Link & CommonResource)[]);
 
 export type CommonResource = {
-  id?: number,
+  id?: string,
   name: string,
   date: Date,
   dateAsString?: string,

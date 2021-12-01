@@ -3,6 +3,9 @@ import {environment} from "../../../environments/environment";
 import {Router} from "@angular/router";
 import {Location} from "@angular/common";
 import {Resource, Type} from "../types/any.type";
+import {HttpClient, HttpHeaders} from "@angular/common/http";
+import {defaultIfEmpty, filter, map} from "rxjs/operators";
+import {Observable} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -23,10 +26,16 @@ export class BaseService {
   private _defaultResource: Resource;
 
   /**
-   * Constructeur de UrlService
+   * Constructeur de BaseService
+   * @param _http Client HTTP
+   * @param _router Permet de gérer la navigtion
+   * @param  _location Permet d'obtenir les états du navigateur
    */
-  constructor(private _router: Router, private _location: Location) {
-    this._urls = {};
+  constructor(private _http: HttpClient, private _router: Router, private _location: Location) {
+    this._urls = {
+      frontend: {},
+      backend: {}
+    };
     this._resources = [] as Resource[];
     this._defaultResource = {} as Resource;
   }
@@ -36,7 +45,11 @@ export class BaseService {
    * @param key Catégorie
    */
   public buildService(key: string): this {
-    let urls: any = {};
+    let urls: any = {
+      frontend: {},
+      backend: {}
+    };
+
     let baseUrl = `${environment.frontend.protocol}://${environment.frontend.host}`;
 
     if (environment.frontend.port) {
@@ -44,15 +57,25 @@ export class BaseService {
     }
 
     Object.keys((environment.frontend.endpoints[key] || {})).forEach(category => {
-      urls[category] = `${baseUrl}${environment.frontend.endpoints[key][category]}`
+      urls.frontend[category] = `${baseUrl}${environment.frontend.endpoints[key][category]}`
     });
-    this._urls = urls;
 
+    baseUrl = `${environment.backend.protocol}://${environment.backend.host}`;
+
+    if (environment.backend.port) {
+      baseUrl += `:${environment.backend.port}`;
+    }
+
+    Object.keys((environment.backend.endpoints[key] || {})).forEach(category => {
+      urls.backend[category] = `${baseUrl}${environment.backend.endpoints[key][category]}`
+    });
+
+    this._urls = urls;
     return this;
   }
 
   getBaseUrl() {
-    return this._urls.all ? this._urls.all : "";
+    return this._urls.frontend.all ? this._urls.all : "";
   }
 
   /**
@@ -60,7 +83,7 @@ export class BaseService {
    * @param id Identifiant d'un item
    */
   getViewUrl(id: number): string {
-    return this._urls.one ? this._urls.one.replace(":id", id) : "";
+    return this._urls.frontend.one ? this._urls.one.replace(":id", id) : "";
   }
 
   /**
@@ -68,15 +91,7 @@ export class BaseService {
    * @param id Identifiant d'un item
    */
   getEditUrl(id: number): string {
-    return this._urls.update ? this._urls.update.replace(":id", id) : "";
-  }
-
-  /**
-   * Obtenir l'URL associée à la suppression d'un item
-   * @param id Identifiant d'un item
-   */
-  getDeleteUrl(id: number): string {
-    return this._urls.delete ? this._urls.delete.replace(":id", id) : "";
+    return this._urls.frontend.update ? this._urls.update.replace(":id", id) : "";
   }
 
   /**
@@ -134,8 +149,12 @@ export class BaseService {
   /**
    * Récupérer toutes les vidéos en ligne
    */
-  fetch(): Resource[] {
-    return this._resources;
+  fetch(): Observable<Resource[]> {
+    return this._http.get<Resource[]>(this._urls.backend.all)
+      .pipe(
+        filter((res) => !!res),
+        defaultIfEmpty([] as Resource[])
+      );
   }
 
   /**
@@ -150,29 +169,20 @@ export class BaseService {
    * Obtenir une vidéo en ligne
    * @param id Identifiant
    */
-  protected fetchOne(id: number): Resource {
-    return this._resources[id] || this._defaultResource;
+  fetchOne(id: string | undefined): Observable<Resource> {
+    return this._http.get<Resource>(this._urls.backend.one.replace(':id', id))
+      .pipe(
+        filter((res: Resource) => !!res),
+        defaultIfEmpty({} as Resource)
+      );
   }
 
   /**
    * Ajouter une nouvelle ressource
    * @param newRes Nouvelle ressource
    */
-  addOne(newRes: Resource): number {
-    let maxId = 0;
-    if (!this._resources.find(res => {
-      if (res.id && res.id > maxId) {
-        maxId = res.id + 1
-      }
-      return res.name === newRes.name
-    })) {
-      newRes.id = maxId;
-      newRes.date = new Date(Date.now());
-      this._resources.push(newRes);
-      return this._resources.length - 1;
-    }
-
-    return -1;
+  addOne(newRes: Resource): Observable<any> {
+    return this._http.post<Resource>(this._urls.backend.add, newRes, BaseService._options());
   }
 
   /**
@@ -180,51 +190,24 @@ export class BaseService {
    * @param id Identifiant
    * @param res Nouvelle ressource
    */
-  updateOne(id: number | undefined, res: Resource): number {
-    let foundIndexWithName = this.findObjectIndexByName(res.name);
-    let foundIndex = this.findObjectIndex(id);
-
-    if (foundIndex >= 0 && foundIndexWithName < 0) {
-      res.id = this._resources[foundIndex].id;
-      this._resources[foundIndex] = res;
-
-      return foundIndex;
-    }
-
-    return -1;
+  updateOne(id: string | undefined, res: Resource): Observable<any> {
+    return this._http.put<Resource>(this._urls.backend.update.replace(':id', id), res, BaseService._options());
   }
 
   /**
    * Supprimer une ressource
    * @param id Identifiant
    */
-  deleteOne(id: number): number {
-    let foundIndex = this.findObjectIndex(id);
-
-    if (foundIndex >= 0) {
-      this._resources.splice(foundIndex, 1);
-    }
-
-    return foundIndex;
+  deleteOne(id: string | undefined): Observable<string> {
+    return this._http.delete(this._urls.backend.delete.replace(':id', id))
+      .pipe(
+        map(() => id as string)
+      )
   }
 
-  /**
-   * Trouver l'index dans le tableau d'un objet
-   * @param id Identifiant de l'objet
-   */
-  findObjectIndex(id: number | undefined): number {
-    return this._resources.findIndex((res: Resource) => {
-      return res.id === id;
-    });
-  }
-
-  /**
-   * Trouver l'index dans le tableau d'un objet
-   * @param name Nom associé à l'objet
-   */
-  findObjectIndexByName(name: string | undefined): number {
-    return this._resources.findIndex((res: Resource) => {
-      return res.name === name;
-    });
+  private static _options(headerList: object = {}) {
+    return {
+      headers: new HttpHeaders(Object.assign({'Content-Type': 'application/json'}, headerList))
+    };
   }
 }

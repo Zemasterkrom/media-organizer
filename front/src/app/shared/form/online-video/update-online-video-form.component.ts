@@ -1,10 +1,10 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
 import {map, mergeMap} from "rxjs/operators";
-import {of} from "rxjs";
 import {OnlineVideoService} from "../../services/online-video.service";
 import {OnlineVideoFormComponent} from "./online-video-form.component";
 import {Link} from "../../types/link.type";
+import {Errors} from "../../types/note.type";
 
 @Component({
   selector: 'update-online-video-form',
@@ -33,10 +33,8 @@ export class UpdateOnlineVideoFormComponent extends OnlineVideoFormComponent imp
     this._route.params
       .pipe(
         map((params: any) => params.id),
-        mergeMap((id: string) => of(this.__onlineVideoService.fetchOne(parseInt(id))))
+        mergeMap((id: string) => this.__onlineVideoService.fetchOne(id))
       )
-      .subscribe((video: Link) => {
-        super.model = video
-      })
+      .subscribe((video: Link) => super.model = video, () => super.error = Errors.NOT_FOUND)
   }
 }

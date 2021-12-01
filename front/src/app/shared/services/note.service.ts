@@ -4,6 +4,8 @@ import {NOTES} from "../../_static/notes";
 import {Note} from "../types/note.type";
 import {Router} from "@angular/router";
 import {Location} from "@angular/common";
+import {HttpClient} from "@angular/common/http";
+import {Observable} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -15,30 +17,24 @@ export class NoteService extends BaseService {
   /**
    * Constructeur de NoteService
    */
-  constructor(private _noteRouter: Router, private _noteLocation: Location) {
-    super(_noteRouter, _noteLocation);
+  constructor(private __http:HttpClient, private _noteRouter: Router, private _noteLocation: Location) {
+    super(__http,_noteRouter, _noteLocation);
     this.buildService("notes");
-    super.defaultResource = {
-      id: -1,
-      name: "Default note",
-      content: "This is a default note",
-      date: new Date(2000, 1, 1)
-    };
-    super.resources = Object.assign([], NOTES);
+    super.defaultResource = Object.assign({}, NOTES[0]);
   }
 
   /**
    * Récupérer toutes les notes
    */
-  fetch(): Note[] {
-    return <Note[]>super.fetch();
+  fetch(): Observable<Note[]> {
+    return <Observable<Note[]>>super.fetch();
   }
 
   /**
    * Obtenir une note
    * @param id Identifiant
    */
-  fetchOne(id: number): Note {
-    return <Note>super.fetchOne(id);
+  fetchOne(id: string | undefined): Observable<Note> {
+    return <Observable<Note>>super.fetchOne(id);
   }
 }

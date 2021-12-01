@@ -3,8 +3,7 @@ import {NoteFormComponent} from "./note-form.component";
 import {NoteService} from "../../services/note.service";
 import {ActivatedRoute} from "@angular/router";
 import {map, mergeMap} from "rxjs/operators";
-import {Note} from "../../types/note.type";
-import {of} from "rxjs";
+import {Errors, Note} from "../../types/note.type";
 
 @Component({
   selector: 'update-note-form',
@@ -33,10 +32,8 @@ export class UpdateNoteFormComponent extends NoteFormComponent implements OnInit
     this._route.params
       .pipe(
         map((params: any) => params.id),
-        mergeMap((id: string) => of(this.__noteService.fetchOne(parseInt(id))))
+        mergeMap((id: string) => this.__noteService.fetchOne(id))
       )
-      .subscribe((note: Note) => {
-        super.model = note
-      })
+      .subscribe((note: Note) => super.model = note, () => super.error = Errors.NOT_FOUND)
   }
 }

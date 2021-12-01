@@ -21,5 +21,6 @@ export const FILE_DOCUMENT_KEYS = {
 
 export enum Errors {
   NOT_FOUND = "Le fichier cherché n'existe pas",
-  ALREADY_EXISTS = "Le fichier que vous tentez d'enregistrer existe déjà"
+  ALREADY_EXISTS = "Le fichier que vous tentez d'enregistrer existe déjà",
+  INTERNAL_ERROR = "Une erreur interne est survenue"
 }

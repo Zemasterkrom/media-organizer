@@ -1,8 +1,8 @@
 import {Component} from '@angular/core';
-import {LINKS} from "../../_static/links";
 import {Link, LINK_KEYS} from "../../shared/types/link.type";
-import {ResourceList} from "../../shared/types/any.type";
 import {OnlineVideoService} from "../../shared/services/online-video.service";
+import {DomSanitizer} from "@angular/platform-browser";
+import {ResourceListComponent} from "../../shared/resource-list/resource-list.component";
 
 @Component({
   selector: 'note-list',
@@ -12,38 +12,23 @@ import {OnlineVideoService} from "../../shared/services/online-video.service";
 /**
  * Représente une liste de vidéos
  */
-export class OnlineVideoListComponent {
+export class OnlineVideoListComponent extends ResourceListComponent {
 
   /**
    * Constructeur de OnlineVideoComponent
-   * @param _onlineVideoService Service de vidéos en ligne
+   * @param __onlineVideoService Service de vidéos en ligne
+   * @param __sanitizer Permet de filtrer les données et notamment autoriser (pour les contenus HTML)
    */
-  constructor(private _onlineVideoService: OnlineVideoService) {
+  constructor(private __onlineVideoService: OnlineVideoService, private __sanitizer: DomSanitizer) {
+    super(__onlineVideoService, __sanitizer);
+    super.columns = LINK_KEYS;
+    super.service = this.__onlineVideoService;
+    this.__onlineVideoService.fetch().subscribe((resources: Link[]) => {
+      resources.map((video: Link) => {
+        video.descriptor = "<iframe width=\"560\" height=\"315\" src=\"" + video.url + "\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture\" allowfullscreen></iframe>";
+      });
+      super.resources = resources;
+    });
   }
 
-  /**
-   * Obtenir les ressources transformées
-   */
-  get newResources(): ResourceList {
-    let resources = LINKS;
-    resources.map((value: Link) => {
-      value.descriptor = "<iframe width=\"560\" height=\"315\" src=\"" + value.url + "\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture\" allowfullscreen></iframe>";
-    })
-
-    return resources;
-  }
-
-  /**
-   * Obtenir les colonnes à afficher
-   */
-  get columns() {
-    return LINK_KEYS;
-  }
-
-  /**
-   * Retourner le service souhaité à la liste générique
-   */
-  get onlineVideoService(): OnlineVideoService {
-    return this._onlineVideoService;
-  }
 }

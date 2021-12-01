@@ -70,7 +70,7 @@ export class ResourceListComponent {
    * @param _sanitizer Permet de filtrer les données et notamment autoriser (pour les contenus HTML)
    */
   constructor(private _service: BaseService, private _sanitizer: DomSanitizer) {
-    this._resources = [{}] as ResourceList;
+    this._resources = [] as ResourceList;
     this._columns = {};
     this._expandedResource = {} as Resource;
     this._viewUrl = "";
@@ -124,7 +124,7 @@ export class ResourceListComponent {
    */
   @Input()
   set resources(value: ResourceList) {
-    this._resources = Object.assign([] as ResourceList,value);
+    this._resources = Object.assign([] as ResourceList, value);
     this._dataSource.data = this._resources;
   }
 
@@ -143,7 +143,6 @@ export class ResourceListComponent {
   get dataSource(): MatTableDataSource<Resource> {
     return this._dataSource;
   }
-
 
   /**
    * Afficher la ressource (détails)
@@ -170,14 +169,6 @@ export class ResourceListComponent {
   }
 
   /**
-   * Obtenir l'URL associée à la suppression d'un item
-   * @param id Identifiant d'un item
-   */
-  getDeleteUrl(id: number): string {
-    return this._service.getDeleteUrl(id);
-  }
-
-  /**
    * Assurer que la donnée fournie est autorisée à être exécutée
    * @param resource Resource contnenant les données
    */
@@ -199,12 +190,10 @@ export class ResourceListComponent {
    * @param resource Ressource à supprimer
    */
   delete(resource: Resource) {
-    let id = resource && (resource.id !== undefined && resource.id >= 0) ? resource.id : -1;
-    let deletedId = this._service.deleteOne(id);
-
-    if (deletedId >= 0) {
-      this._resources.splice(deletedId, 1);
-      this._dataSource.data = this._resources;
-    }
+    this._service.deleteOne(resource.id as string)
+      .subscribe((id: string) => {
+        this._resources = <ResourceList>(this._resources as Resource[]).filter((res: Resource) => res.id !== id)
+        this._dataSource.data = this._resources;
+      });
   }
 }

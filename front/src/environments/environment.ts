@@ -4,6 +4,36 @@
 
 export const environment: any = {
   production: false,
+  backend: {
+    protocol: 'http',
+    host: 'localhost',
+    port: '3000',
+    endpoints: {
+      documents: {
+        all: '/document/all',
+        one: '/document/findById/:id',
+        add: '/document/add',
+        update: '/document/update/:id',
+        delete: '/document/delete/:id'
+      },
+
+      links: {
+        all: '/link/all',
+        one: '/link/findById/:id',
+        add: '/link/add',
+        update: '/link/update/:id',
+        delete: '/link/delete/:id'
+      },
+
+      notes: {
+        all: '/note/all',
+        one: '/note/findById/:id',
+        add: '/note/add',
+        update: '/note/update/:id',
+        delete: '/note/delete/:id'
+      }
+    }
+  },
   frontend: {
     protocol: 'http',
     host: 'localhost',

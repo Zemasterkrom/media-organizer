@@ -2,9 +2,9 @@ import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {CustomValidators} from "../CustomValidators";
 import {FormComponent} from "../form.component";
-import {Link} from "../../types/link.type";
+import {Errors, Link} from "../../types/link.type";
 import {OnlineVideoService} from "../../services/online-video.service";
-import {Errors} from "../../types/link.type";
+import {HttpStatusCode} from "@angular/common/http";
 
 @Component({
   selector: 'online-video-form',
@@ -46,16 +46,8 @@ export class OnlineVideoFormComponent extends FormComponent {
    */
   @Input()
   set model(model: Link) {
-    let id = model.id !== undefined ? model.id : -1;
     this._model = model;
-
-    if (id < 0) {
-      this._error = "La vidéo cherchée n'existe pas";
-    } else {
-      this._model.id = id;
-      this._model.date = new Date(Date.now());
-      this._form.patchValue(this._model);
-    }
+    this._form.patchValue(this._model);
   }
 
   /**
@@ -87,27 +79,35 @@ export class OnlineVideoFormComponent extends FormComponent {
 
   /**
    * Ajouter une vidéo
-   * @param video Vidéo
+   * @param video Vidéo à ajouter
    */
   addOnlineVideo(video: Link) {
-    if (this._onlineVideoService.addOne(video) >= 0) {
-      this._onlineVideoService.navigateToHome();
-    } else {
-      this._error = Errors.ALREADY_EXISTS;
-    }
+    this._onlineVideoService.addOne(video).subscribe(() => this._onlineVideoService.navigateToHome(), (error) => {
+      this._error = error.statusCode === HttpStatusCode.Conflict ? Errors.ALREADY_EXISTS : Errors.INTERNAL_ERROR;
+    });
   }
 
   /**
-   * Ajouter une vidéo
+   * Mettre à jour une vidéo
    * @param id Identifiant
    * @param video Vidéo
    */
-  updateOnlineVideo(id: number | undefined, video: Link) {
-    if (this._onlineVideoService.updateOne(id, video) >= 0) {
-      this._onlineVideoService.navigateByRoute(this._onlineVideoService.getBaseUrl());
-    } else {
-      this._error = Errors.ALREADY_EXISTS;
-    }
+  updateOnlineVideo(id: string | undefined, video: Link) {
+    this._onlineVideoService.updateOne(id, video).subscribe(() => this._onlineVideoService.navigateByRoute(this._onlineVideoService.getBaseUrl()), (error) => {
+      this._error = error.statusCode === 409 ? Errors.ALREADY_EXISTS : Errors.INTERNAL_ERROR;
+
+      switch (error.statusCode) {
+        case HttpStatusCode.Conflict:
+          this._error = Errors.ALREADY_EXISTS;
+          break;
+        case HttpStatusCode.NotFound:
+          this._error = Errors.NOT_FOUND;
+          break;
+        default:
+          this._error = Errors.INTERNAL_ERROR;
+          break;
+      }
+    });
   }
 
   isNotFound(error: string) {

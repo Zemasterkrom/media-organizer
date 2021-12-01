@@ -4,6 +4,7 @@ import {CustomValidators} from "../CustomValidators";
 import {Errors, Note} from "../../types/note.type";
 import {FormComponent} from "../form.component";
 import {NoteService} from "../../services/note.service";
+import {HttpStatusCode} from "@angular/common/http";
 
 @Component({
   selector: 'note-form',
@@ -43,15 +44,8 @@ export class NoteFormComponent extends FormComponent {
    */
   @Input()
   set model(model: Note) {
-    let id = model.id !== undefined ? model.id : -1;
     this._model = model;
-
-    if (id < 0) {
-      this._error = "La note cherchée n'existe pas";
-    } else {
-      this._model.id = id;
-      this._form.patchValue(this._model);
-    }
+    this._form.patchValue(this._model);
   }
 
   /**
@@ -81,11 +75,9 @@ export class NoteFormComponent extends FormComponent {
    * @param note Note
    */
   addNote(note: Note) {
-    if (this._noteService.addOne(note) >= 0) {
-      this._noteService.navigateToHome();
-    } else {
-      this._error = Errors.ALREADY_EXISTS;
-    }
+    this._noteService.addOne(note).subscribe(() => this._noteService.navigateToHome(), (error) => {
+      this._error = error.statusCode === HttpStatusCode.Conflict ? Errors.ALREADY_EXISTS : Errors.INTERNAL_ERROR;
+    });
   }
 
   /**
@@ -93,12 +85,22 @@ export class NoteFormComponent extends FormComponent {
    * @param id Identifiant
    * @param note Note
    */
-  updateNote(id: number, note: Note) {
-    if (this._noteService.updateOne(id, note) >= 0) {
-      this._baseService.navigateByRoute(this._baseService.getBaseUrl());
-    } else {
-      this._error = Errors.ALREADY_EXISTS;
-    }
+  updateNote(id: string, note: Note) {
+    this._noteService.updateOne(id, note).subscribe(() => this._noteService.navigateByRoute(this._noteService.getBaseUrl()), (error) => {
+      this._error = error.statusCode === 409 ? Errors.ALREADY_EXISTS : Errors.INTERNAL_ERROR;
+
+      switch (error.statusCode) {
+        case HttpStatusCode.Conflict:
+          this._error = Errors.ALREADY_EXISTS;
+          break;
+        case HttpStatusCode.NotFound:
+          this._error = Errors.NOT_FOUND;
+          break;
+        default:
+          this._error = Errors.INTERNAL_ERROR;
+          break;
+      }
+    });
   }
 
   isNotFound(error: string) {
