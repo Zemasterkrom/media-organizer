@@ -182,8 +182,8 @@ export class BaseService {
    * Ajouter une nouvelle ressource
    * @param newRes Nouvelle ressource
    */
-  addOne(newRes: Resource): Observable<any> {
-    return this._http.post<Resource>(this._urls.backend.add, newRes, BaseService._options());
+  addOne(newRes: any): Observable<any> {
+    return this._http.post<Resource>(this._urls.backend.add, newRes);
   }
 
   /**

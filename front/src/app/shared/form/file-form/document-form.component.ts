@@ -16,7 +16,7 @@ import {FileDocument, filterFields} from "../../types/file-document";
  * Formulaire de note. Une note est une ressource textuelle simple.
  */
 export class DocumentFormComponent extends FormComponent {
-
+  file:File;
   /**
    * Modèle d'un document du formulaire
    * @private
@@ -35,6 +35,7 @@ export class DocumentFormComponent extends FormComponent {
   constructor(private _documentService: DocumentService) {
     super(_documentService);
     this._model = {} as FileDocument;
+    this.file = {} as File;
     this._submit$ = new EventEmitter<FileDocument>();
     this._form = this._buildForm();
   }
@@ -77,7 +78,13 @@ export class DocumentFormComponent extends FormComponent {
    * @param doc Document
    */
   addDocument(doc: FileDocument) {
-    this._documentService.addOne(filterFields(doc)).subscribe(() => this._documentService.navigateToHome(), (error) => {
+    var formData = new FormData();
+    if (this.file) {
+      formData.append("file", this.file, this.file.name);
+      const nn = this._form.get("name")?.value;
+      formData.append("name", nn);
+    }
+    this._documentService.addOne(formData).subscribe(() => this._documentService.navigateToHome(), (error) => {
       if (error.status > 0) {
         this._error = error.statusCode === HttpStatusCode.Conflict || HttpStatusCode.UnprocessableEntity ? Errors.ALREADY_EXISTS : Errors.INTERNAL_ERROR;
       } else {
@@ -121,6 +128,7 @@ export class DocumentFormComponent extends FormComponent {
    * @param data Données reçues par le formulaire
    */
   changeFile(data: any) {
-    this._model.file = data.files.item(0);
+    this._model.file = data.files[0];
+    this.file = data.files[0];
   }
 }
