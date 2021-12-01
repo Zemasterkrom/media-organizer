@@ -123,9 +123,9 @@ export class LinkDao {
      * @param url URL de vidéo YouTube / Dailymotion
      */
     getEmbedUrl(url: string): string {
-        let matches = (url.match("^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube\.com|youtu.be))(\/(?:[\\w\-]+\\?v=|embed\/|v\/)?)([\\w\-]+)$") || url.match("^(?:(?:https?):)?(?:\/\/)?(?:www\.)?(?:(?:dailymotion\.com(?:\/embed)?\/video)|dai\.ly)\/([a-zA-Z0-9]+)(?:_[\w_-]+)?$"))
+        let matches = (url.match("^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube\.com|youtu.be))(\/(?:[\\w\-]+\\?v=|embed\/|v\/)?)([\\w\-]+)$") || url.match("^(?:(?:https?):)?(?:\/\/)?(?:www\.)?(?:(?:dailymotion\.com(?:\/embed)?\/video)|dai\.ly)\/([a-zA-Z0-9]+)(?:_[\w_-]+)?.+$"))
             .filter(part => !!part);
-        return matches[0].indexOf("youtu") >= 0 ? "https://youtube.com/embed/" + matches[matches.length - 1] : "https://dailymotion.com/video/embed/" + matches[matches.length - 1];
+        return matches[0].indexOf("youtu") >= 0 ? "https://youtube.com/embed/" + matches[matches.length - 1] : "https://dailymotion.com/embed/video/" + matches[matches.length - 1];
     }
 
     /**

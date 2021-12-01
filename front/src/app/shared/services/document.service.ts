@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {BaseService} from "./base.service";
-import {FileDocument} from "../types/filerFields";
+import {FileDocument} from "../types/file-document";
 import {DOCUMENTS} from "../../_static/documents";
 import {Location} from "@angular/common";
 import {Router} from "@angular/router";

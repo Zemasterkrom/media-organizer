@@ -12,6 +12,13 @@ export class LinkDto {
   @IsNotEmpty()
   name: string;
 
+  @ApiProperty({
+    name: 'name',
+    description: 'Type of the video resource (not required, detected automatically)',
+    example: 'YouTube',
+  })
+  @IsString()
+  @IsOptional()
   type: string;
 
   @ApiProperty({

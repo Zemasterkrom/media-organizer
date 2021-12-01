@@ -4,6 +4,7 @@
   </h1>
   <mat-dialog-content>
     <form novalidate [formGroup]="form">
+      <input type="hidden" name="id" *ngIf="model.id !== undefined" value="{{model?.id}}" />
       <table>
         <tr>
           <td>

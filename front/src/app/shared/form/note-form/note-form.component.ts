@@ -61,6 +61,7 @@ export class NoteFormComponent extends FormComponent {
    */
   protected _buildForm(): FormGroup {
     return new FormGroup({
+      id: new FormControl(),
       name: new FormControl('', Validators.compose([
         Validators.required, CustomValidators.notEmpty
       ])),
@@ -91,9 +92,8 @@ export class NoteFormComponent extends FormComponent {
    */
   updateNote(id: string, note: Note) {
     this._noteService.updateOne(id, filterFields(note)).subscribe(() => this._noteService.navigateByRoute(this._noteService.getBaseUrl()), (error) => {
-
       if (error.status > 0) {
-        switch (error.statusCode) {
+        switch (error.status) {
           case HttpStatusCode.Conflict:
           case HttpStatusCode.UnprocessableEntity:
             this._error = Errors.ALREADY_EXISTS;
@@ -108,7 +108,6 @@ export class NoteFormComponent extends FormComponent {
       } else {
         this._error = Errors.INTERNAL_ERROR;
       }
-
     });
   }
 

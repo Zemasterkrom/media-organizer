@@ -27,6 +27,15 @@ export class LinkEntity {
   link: string;
 
   @ApiProperty({
+    name: 'type',
+    description: 'Type of the video resource (not required, detected automatically)',
+    example: 'YouTube',
+  })
+  @Expose()
+  @Type(() => String)
+  type: string;
+
+  @ApiProperty({
     name: 'date',
     description: 'Created at',
     example: new Date(Date.now()).toDateString(),

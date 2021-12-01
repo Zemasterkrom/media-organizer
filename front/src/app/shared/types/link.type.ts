@@ -23,6 +23,7 @@ export enum Errors {
 }
 
 export function filterFields(link: Link) : Link {
+  delete link.id;
   delete link.date;
   delete link.type;
   delete link.descriptor;

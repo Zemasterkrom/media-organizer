@@ -85,7 +85,7 @@ export class OnlineVideoFormComponent extends FormComponent {
   addOnlineVideo(video: Link) {
     this._onlineVideoService.addOne(filterFields(video)).subscribe(() => this._onlineVideoService.navigateToHome(), (error) => {
       if (error.status > 0) {
-        this._error = error.statusCode === HttpStatusCode.Conflict || HttpStatusCode.UnprocessableEntity ? Errors.ALREADY_EXISTS : Errors.INTERNAL_ERROR;
+        this._error = error.status === HttpStatusCode.Conflict || HttpStatusCode.UnprocessableEntity ? Errors.ALREADY_EXISTS : Errors.INTERNAL_ERROR;
       } else {
         this._error = Errors.INTERNAL_ERROR;
       }
@@ -101,7 +101,7 @@ export class OnlineVideoFormComponent extends FormComponent {
     this._onlineVideoService.updateOne(id, filterFields(video)).subscribe(() => this._onlineVideoService.navigateByRoute(this._onlineVideoService.getBaseUrl()), (error) => {
 
       if (error.status > 0) {
-        switch (error.statusCode) {
+        switch (error.status) {
           case HttpStatusCode.Conflict:
           case HttpStatusCode.UnprocessableEntity:
             this._error = Errors.ALREADY_EXISTS;

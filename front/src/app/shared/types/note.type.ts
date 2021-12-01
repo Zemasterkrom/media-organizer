@@ -16,6 +16,7 @@ export enum Errors {
 }
 
 export function filterFields(note: Note) : Note {
+  delete note.id;
   delete note.date;
   delete note.descriptor;
   delete note.dateAsString;
