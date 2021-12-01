@@ -1,3 +1,21 @@
+<div>
+  <form novalidate [formGroup]="form">
+    <h1>Rechercher un voyage</h1>
+    <p>
+      <mat-form-field class="full-width">
+        <input type="text" matInput placeholder="Name" formControlName="name" requis name="name" />
+      </mat-form-field>
+    </p>
+    <p>
+      <mat-form-field class="full-width">
+        <input type="text" matInput placeholder="Type" formControlName="type" requis name="type" />
+      </mat-form-field>
+    </p>
+  </form>
+  <a mat-raised-button color="warn" (click)="find()">Filtrer</a>
+</div>
+
+
 <div *ngIf="resources.length">
   <table [dataSource]="dataSource | formatDataSource" mat-table class="mat-elevation-z8" multiTemplateDataRows>
     <ng-container matColumnDef="{{column.key}}" *ngFor="let column of columns | keyvalue">

@@ -23,8 +23,8 @@ export class DocumentService extends BaseService {
   /**
    * Récupérer toutes les documents
    */
-  fetch(): Observable<FileDocument[]> {
-    return <Observable<FileDocument[]>>super.fetch();
+  fetch(query: String): Observable<FileDocument[]> {
+    return <Observable<FileDocument[]>>super.fetch(query);
   }
 
   /**

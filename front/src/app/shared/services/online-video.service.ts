@@ -26,8 +26,9 @@ export class OnlineVideoService extends BaseService {
   /**
    * Récupérer toutes les vidéos en ligne
    */
-  fetch(): Observable<Link[]> {
-    return <Observable<Link[]>>super.fetch();
+  fetch(query: String): Observable<Link[]> {
+    console.log(query);
+    return <Observable<Link[]>>super.fetch(query);
   }
 
   /**

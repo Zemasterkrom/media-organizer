@@ -26,8 +26,9 @@ export class NoteService extends BaseService {
   /**
    * Récupérer toutes les notes
    */
-  fetch(): Observable<Note[]> {
-    return <Observable<Note[]>>super.fetch();
+  fetch(query: String): Observable<Note[]> {
+    console.log(query);
+    return <Observable<Note[]>>super.fetch(query);
   }
 
   /**

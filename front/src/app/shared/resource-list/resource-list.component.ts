@@ -4,6 +4,7 @@ import {animate, state, style, transition, trigger} from "@angular/animations";
 import {MatTableDataSource} from "@angular/material/table";
 import {BaseService} from "../services/base.service";
 import {DomSanitizer, SafeHtml} from "@angular/platform-browser";
+import {FormControl, FormGroup} from "@angular/forms";
 
 @Component({
   selector: 'resource-list',
@@ -21,6 +22,9 @@ import {DomSanitizer, SafeHtml} from "@angular/platform-browser";
  * Permet de construire un générateur de liste générique pour les items ajoutés
  */
 export class ResourceListComponent implements OnChanges{
+  form: FormGroup;
+  query: string = '';
+
   /**
    * Colonnes à afficher
    * @protected
@@ -70,6 +74,11 @@ export class ResourceListComponent implements OnChanges{
    * @param _sanitizer Permet de filtrer les données et notamment autoriser (pour les contenus HTML)
    */
   constructor(private _service: BaseService, private _sanitizer: DomSanitizer) {
+    this.query = "";
+    this.form = new FormGroup({
+      name: new FormControl(null),
+      type: new FormControl(null),
+    });
     this._resources = [] as ResourceList;
     this._columns = {};
     this._expandedResource = {} as Resource;
@@ -201,5 +210,28 @@ export class ResourceListComponent implements OnChanges{
         this._resources = <ResourceList>(this._resources as Resource[]).filter((res: Resource) => res.id !== id)
         this._dataSource.data = this._resources;
       });
+  }
+
+  find() {
+    if (this.form.valid) {
+      this.query = '?';
+      const link = this.form.value;
+      for (const property in link) {
+        if (link[property] && link[property] != '') {
+          this.query += property + '=' + link[property] + '&';
+        }
+      }
+      this.query = this.query.slice(0, this.query.length - 1);
+      this._service.fetch(this.query)
+          .subscribe(
+              (res: Resource[]) => {
+                this._resources = <ResourceList>(res);
+                this._dataSource.data = this._resources;
+              },
+              (err) => {
+                console.error(err);
+              }
+          );
+    }
   }
 }

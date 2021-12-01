@@ -3,7 +3,6 @@ import {Note, NOTE_KEYS} from "../../shared/types/note.type";
 import {NoteService} from "../../shared/services/note.service";
 import {ResourceListComponent} from "../../shared/resource-list/resource-list.component";
 import {DomSanitizer} from "@angular/platform-browser";
-import {OnlineVideoService} from "../../shared/services/online-video.service";
 
 @Component({
   selector: 'note-list',
@@ -14,7 +13,6 @@ import {OnlineVideoService} from "../../shared/services/online-video.service";
  * Représente une liste de notes
  */
 export class NoteListComponent extends ResourceListComponent {
-
   /**
    * Constructeur de NoteListComponent
    * @param __noteService Service de notes
@@ -24,7 +22,10 @@ export class NoteListComponent extends ResourceListComponent {
     super(__noteService, __sanitizer);
     super.columns = NOTE_KEYS;
     super.service = this.__noteService;
-    this.__noteService.fetch().subscribe((resources: Note[]) => {
+    if(super.query == undefined){
+      super.query = "";
+    }
+    this.__noteService.fetch(super.query).subscribe((resources: Note[]) => {
       resources.map((note: Note) => {
         note.descriptor = note.note;
       });

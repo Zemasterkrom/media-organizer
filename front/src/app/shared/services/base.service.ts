@@ -149,8 +149,9 @@ export class BaseService {
   /**
    * Récupérer toutes les vidéos en ligne
    */
-  fetch(): Observable<Resource[]> {
-    return this._http.get<Resource[]>(this._urls.backend.all)
+  fetch(query: String): Observable<Resource[]> {
+    if(query == undefined){ query=""}
+    return this._http.get<Resource[]>(this._urls.backend.all+ query)
       .pipe(
         filter((res) => !!res),
         defaultIfEmpty([] as Resource[])
