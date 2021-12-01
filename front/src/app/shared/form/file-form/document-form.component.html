@@ -1,0 +1,34 @@
+<div *ngIf="!(error && isUpdateMode && isNotFound(error))" class="center">
+  <h1 *ngIf="isUpdateMode">
+    Mettre à jour une note
+  </h1>
+  <mat-dialog-content>
+    <form novalidate [formGroup]="form">
+      <input type="hidden" formControlName="id" name="id" *ngIf="model.id !== undefined" value="{{model?.id}}" />
+      <table>
+        <tr>
+          <td>
+            <mat-form-field>
+              <input matInput autocomplete="disabled" placeholder="Nom du fichier" formControlName="name" required name="name" />
+              <mat-error *ngIf="form.get('name')?.dirty && form.get('name')?.hasError('notEmpty')">
+                Le nom du fichier ne peut pas être <strong>vide</strong>
+              </mat-error>
+            </mat-form-field>
+          </td>
+        </tr>
+      </table>
+    </form>
+  </mat-dialog-content>
+
+  <mat-dialog-actions>
+    <mat-error *ngIf="error">
+      {{error}}
+    </mat-error>
+    <button mat-button type="button" (click)="cancel()">Annuler</button>
+    <button *ngIf="isUpdateMode"  mat-button color="primary" type="submit" [disabled]="form.invalid" (click)="updateNote(form.get('id')?.value, form.value)">Mettre à jour la note</button>
+    <button *ngIf="!isUpdateMode"  mat-button color="primary" type="submit" [disabled]="form.invalid" (click)="addNote(form.value)">Ajouter la note</button>
+  </mat-dialog-actions>
+</div>
+<div *ngIf="error && isUpdateMode && isNotFound(error)" class="center">
+  <h1>La note recherchée pour modification n'existe pas</h1>
+</div>

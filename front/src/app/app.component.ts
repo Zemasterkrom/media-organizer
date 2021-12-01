@@ -29,6 +29,7 @@ export class AppComponent {
     this._matIconRegistry.addSvgIcon('edit', this._domSanitizer.bypassSecurityTrustResourceUrl('/assets/edit.svg'));
     this._matIconRegistry.addSvgIcon('delete', this._domSanitizer.bypassSecurityTrustResourceUrl('/assets/delete.svg'));
     this._matIconRegistry.addSvgIcon('preview', this._domSanitizer.bypassSecurityTrustResourceUrl('/assets/preview.svg'));
+    this._matIconRegistry.addSvgIcon('file_upload', this._domSanitizer.bypassSecurityTrustResourceUrl('/assets/file_upload.svg'));
   }
 
   get location() : LocationStrategy {
