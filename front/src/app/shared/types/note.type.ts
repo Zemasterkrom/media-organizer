@@ -15,7 +15,7 @@ export enum Errors {
   INTERNAL_ERROR = "Une erreur interne est survenue"
 }
 
-export function removeUnwantedFields(note: Note) : Note {
+export function filterFields(note: Note) : Note {
   delete note.date;
   delete note.descriptor;
   delete note.dateAsString;

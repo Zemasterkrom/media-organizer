@@ -5,26 +5,18 @@ import {LinkEntity} from '../entities/link.entity';
 export class LinkDto {
   @ApiProperty({
     name: 'name',
-    description: 'name',
+    description: 'Name of the video resource',
     example: 'AI plays Trackmania',
   })
   @IsString()
   @IsNotEmpty()
   name: string;
 
-  @ApiProperty({
-    name: 'type',
-    description: 'type',
-    example: 'YouTube',
-  })
-
-  @IsString()
-  @IsNotEmpty()
   type: string;
 
   @ApiProperty({
     name: 'link',
-    description: 'link',
+    description: 'URL of the YouTube/Dailymotion video',
     example: 'https://www.youtube.com/embed/_oNK08LvZ-g',
   })
   @IsUrl()
@@ -32,7 +24,7 @@ export class LinkDto {
 
   @ApiProperty({
     name: 'date',
-    description: 'date',
+    description: 'Last updated date',
     example: new Date(Date.now()).toISOString(),
   })
   @IsDateString()

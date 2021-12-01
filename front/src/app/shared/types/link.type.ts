@@ -1,5 +1,4 @@
 import {CommonResource} from "./any.type";
-import {FileDocument} from "./file-document.type";
 
 export const enum LinkType {
   YouTube = "YouTube",
@@ -23,7 +22,7 @@ export enum Errors {
   INTERNAL_ERROR = "Une erreur interne est survenue"
 }
 
-export function removeUnwantedFields(link: Link) : Link {
+export function filterFields(link: Link) : Link {
   delete link.date;
   delete link.type;
   delete link.descriptor;

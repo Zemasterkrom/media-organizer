@@ -1,6 +1,5 @@
-import { Exclude, Expose, Type } from 'class-transformer';
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import {Schema} from "mongoose";
+import {Exclude, Expose, Type} from 'class-transformer';
+import {ApiProperty} from '@nestjs/swagger';
 
 @Exclude()
 export class LinkEntity {
@@ -13,28 +12,23 @@ export class LinkEntity {
   @Type(() => String)
   id: string;
 
-  @ApiProperty({ name: 'name', description: 'name', example: 'AI plays Trackmania' })
+  @ApiProperty({ name: 'name', description: 'Name of the video resource', example: 'AI plays Trackmania' })
   @Expose()
   @Type(() => String)
   name: string;
 
   @ApiProperty({
     name: 'link',
-    description: 'URL',
+    description: 'URL of the YouTube/Dailymotion video',
     example: 'https://www.youtube.com/embed/_oNK08LvZ-g',
   })
   @Expose()
   @Type(() => String)
   link: string;
 
-  @ApiProperty({ name: 'type', description: 'type', example: 'YouTube' })
-  @Expose()
-  @Type(() => String)
-  type: string;
-
   @ApiProperty({
     name: 'date',
-    description: 'Created At',
+    description: 'Created at',
     example: new Date(Date.now()).toDateString(),
   })
   @Expose()

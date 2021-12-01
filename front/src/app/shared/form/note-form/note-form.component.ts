@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input} from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
-import {CustomValidators} from "../CustomValidators";
-import {Errors, Note, removeUnwantedFields} from "../../types/note.type";
+import {CustomValidators} from "../../validators/custom-validators";
+import {Errors, Note, filterFields} from "../../types/note.type";
 import {FormComponent} from "../form.component";
 import {NoteService} from "../../services/note.service";
 import {HttpStatusCode} from "@angular/common/http";
@@ -64,7 +64,9 @@ export class NoteFormComponent extends FormComponent {
       name: new FormControl('', Validators.compose([
         Validators.required, CustomValidators.notEmpty
       ])),
-      note: new FormControl()
+      note: new FormControl('', Validators.compose([
+        Validators.required, CustomValidators.notEmpty
+      ])),
     })
   }
 
@@ -73,8 +75,12 @@ export class NoteFormComponent extends FormComponent {
    * @param note Note
    */
   addNote(note: Note) {
-    this._noteService.addOne(removeUnwantedFields(note)).subscribe(() => this._noteService.navigateToHome(), (error) => {
-      this._error = error.statusCode === HttpStatusCode.Conflict || HttpStatusCode.UnprocessableEntity ? Errors.ALREADY_EXISTS : Errors.INTERNAL_ERROR;
+    this._noteService.addOne(filterFields(note)).subscribe(() => this._noteService.navigateToHome(), (error) => {
+      if (error.status > 0) {
+        this._error = error.statusCode === HttpStatusCode.Conflict || HttpStatusCode.UnprocessableEntity ? Errors.ALREADY_EXISTS : Errors.INTERNAL_ERROR;
+      } else {
+        this._error = Errors.INTERNAL_ERROR;
+      }
     });
   }
 
@@ -84,20 +90,25 @@ export class NoteFormComponent extends FormComponent {
    * @param note Note
    */
   updateNote(id: string, note: Note) {
-    this._noteService.updateOne(id, removeUnwantedFields(note)).subscribe(() => this._noteService.navigateByRoute(this._noteService.getBaseUrl()), (error) => {
+    this._noteService.updateOne(id, filterFields(note)).subscribe(() => this._noteService.navigateByRoute(this._noteService.getBaseUrl()), (error) => {
 
-      switch (error.statusCode) {
-        case HttpStatusCode.Conflict:
-        case HttpStatusCode.UnprocessableEntity:
-          this._error = Errors.ALREADY_EXISTS;
-          break;
-        case HttpStatusCode.NotFound:
-          this._error = Errors.NOT_FOUND;
-          break;
-        default:
-          this._error = Errors.INTERNAL_ERROR;
-          break;
+      if (error.status > 0) {
+        switch (error.statusCode) {
+          case HttpStatusCode.Conflict:
+          case HttpStatusCode.UnprocessableEntity:
+            this._error = Errors.ALREADY_EXISTS;
+            break;
+          case HttpStatusCode.NotFound:
+            this._error = Errors.NOT_FOUND;
+            break;
+          default:
+            this._error = Errors.INTERNAL_ERROR;
+            break;
+        }
+      } else {
+        this._error = Errors.INTERNAL_ERROR;
       }
+
     });
   }
 

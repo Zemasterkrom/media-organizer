@@ -1,4 +1,4 @@
-import {Injectable} from '@nestjs/common';
+import {Injectable, Logger} from '@nestjs/common';
 import {Model} from 'mongoose';
 import {Link, LinkDocument} from '../link.schema';
 import {InjectModel} from '@nestjs/mongoose';
@@ -59,15 +59,17 @@ export class LinkDao {
      *
      * @return {Observable<Link>}
      */
-    add = (link: LinkDto): Observable<Link> =>
-        from(new this._linkModel(link).save()).pipe(
+    add = (link: LinkDto): Observable<Link> => {
+        link.link = this.getEmbedUrl(link.link);
+        link.type = this.getType(link.link);
+
+        Logger.log(this.getEmbedUrl(link.link));
+        return from(new this._linkModel(link).save()).pipe(
             filter((doc: LinkDto) => this.validateVideoUrl(doc.link)),
-            map((doc: LinkDocument) => {
-                doc.link = this.getEmbedUrl(doc.link);
-                return doc.toJSON();
-            }),
+            map((doc: LinkDocument) => doc.toJSON()),
             defaultIfEmpty(undefined),
         );
+    }
 
     /**
      * Update
@@ -87,6 +89,7 @@ export class LinkDao {
             filter((doc: LinkDocument) => this.validateVideoUrl(doc.link)),
             map((doc: LinkDocument) => {
                 doc.link = this.getEmbedUrl(doc.link);
+                doc.type = this.getType(doc.link);
                 return doc.toJSON()
             }),
             defaultIfEmpty(undefined),
@@ -120,8 +123,16 @@ export class LinkDao {
      * @param url URL de vidéo YouTube / Dailymotion
      */
     getEmbedUrl(url: string): string {
-        let matches = (url.match("^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\\w\-]+)$") || url.match("^(?:(?:https?):)?(?:\/\/)?(?:www\.)?(?:(?:dailymotion\.com(?:\/embed)?\/video)|dai\.ly)\/([a-zA-Z0-9]+)(?:_[\w_-]+)?$"))
+        let matches = (url.match("^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube\.com|youtu.be))(\/(?:[\\w\-]+\\?v=|embed\/|v\/)?)([\\w\-]+)$") || url.match("^(?:(?:https?):)?(?:\/\/)?(?:www\.)?(?:(?:dailymotion\.com(?:\/embed)?\/video)|dai\.ly)\/([a-zA-Z0-9]+)(?:_[\w_-]+)?$"))
             .filter(part => !!part);
-        return matches[0].indexOf("youtu") >= 0 ? "https://youtube.com/embed/" + matches[matches.length - 1] : "https://dailymotion.com/embed/" + matches[matches.length - 1];
+        return matches[0].indexOf("youtu") >= 0 ? "https://youtube.com/embed/" + matches[matches.length - 1] : "https://dailymotion.com/video/embed/" + matches[matches.length - 1];
+    }
+
+    /**
+     * Obtenir le type de la vidéo ajoutée
+     * @param url URL de la vidéo
+     */
+    getType(url: string): string {
+        return url.indexOf("youtu") >= 0 ? "YouTube" : "Dailymotion";
     }
 }

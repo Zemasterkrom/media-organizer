@@ -10,12 +10,15 @@
           <td>
             <mat-form-field>
               <input matInput autocomplete="disabled" placeholder="Nom de la note" formControlName="name" required name="name" />
-              <mat-error *ngIf="form.get('name')?.dirty && form.get('name')?.hasError('required')">
+              <mat-error *ngIf="form.get('name')?.dirty && form.get('name')?.hasError('notEmpty')">
                 Le nom de la note ne peut pas être <strong>vide</strong>
               </mat-error>
             </mat-form-field>
             <mat-form-field>
-              <textarea matInput autocomplete="disabled" placeholder="Contenu de la note" formControlName="note" name="content"></textarea>
+              <textarea matInput autocomplete="disabled" placeholder="Contenu de la note" formControlName="note" required name="note" ></textarea>
+              <mat-error *ngIf="form.get('note')?.dirty && form.get('note')?.hasError('notEmpty')">
+                Le nom de la note ne peut pas être <strong>vide</strong>
+              </mat-error>
             </mat-form-field>
           </td>
         </tr>

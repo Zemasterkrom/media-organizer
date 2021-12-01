@@ -12,14 +12,14 @@ export class NoteEntity {
     @Type(() => String)
     id: string;
 
-    @ApiProperty({name: 'name', description: 'name', example: 'Default note'})
+    @ApiProperty({name: 'name', description: 'Note resource name', example: 'Default note'})
     @Expose()
     @Type(() => String)
     name: string;
 
     @ApiProperty({
         name: 'note',
-        description: 'URL',
+        description: 'Note content',
         example: 'This is a default note',
     })
     @Expose()
@@ -28,7 +28,7 @@ export class NoteEntity {
 
     @ApiProperty({
         name: 'date',
-        description: 'Created At',
+        description: 'Last updated note date',
         example: new Date(Date.now()).toDateString(),
     })
     @Expose()

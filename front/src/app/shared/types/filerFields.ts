@@ -26,7 +26,7 @@ export enum Errors {
   INTERNAL_ERROR = "Une erreur interne est survenue"
 }
 
-export function removeUnwantedFields(file: FileDocument) : FileDocument {
+export function filterFields(file: FileDocument) : FileDocument {
   delete file.date;
   delete file.type;
   delete file.descriptor;

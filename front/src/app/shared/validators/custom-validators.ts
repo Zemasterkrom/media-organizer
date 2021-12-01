@@ -19,9 +19,9 @@ export class CustomValidators {
    * URL des regex : https://stackoverflow.com/questions/19377262/regex-for-youtube-url, https://stackoverflow.com/questions/12387389/how-to-parse-dailymotion-video-url-in-javascript/15942126
    */
   static videoUrl(control: AbstractControl): ValidationErrors | null {
-    let val = ('' || control.value);
-    return val.match("^(?:(?:https?):)?(?:\\/\\/)?(?:www\\.)?(?:(?:dailymotion\\.com(?:\\/embed)?\\/video)|dai\\.ly)\\/([a-zA-Z0-9]+)(?:_[\\w_-]+)?$") ||
-            val.match("^((?:https?:)?\\/\\/)?((?:www|m)\\.)?((?:youtube\\.com|youtu.be))(\\/(?:[\\w\\-]+\\?v=|embed\\/|v\\/)?)([\\w\\-]+)(\\S+)?$") ? null : {
+    let url = (control.value || '');
+    return new RegExp("^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube\.com|youtu.be))(\/(?:[\\w\-]+\\?v=|embed\/|v\/)?)([\\w\-]+)$").test(url) ||
+            new RegExp("^((?:https?:)?\\/\\/)?((?:www|m)\\.)?((?:youtube\\.com|youtu.be))(\\/(?:[\\w\\-]+\\?v=|embed\\/|v\\/)?)([\\w\\-]+)(\\S+)?$").test(url) ? null : {
       videoUrl: true
     }
   }

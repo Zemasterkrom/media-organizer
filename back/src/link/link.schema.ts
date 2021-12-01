@@ -30,8 +30,9 @@ export class Link {
 
   @Prop({
     type: String,
-    required: true,
+    required: false,
     trim: true,
+    default: ''
   })
   type: string;
 
@@ -40,7 +41,7 @@ export class Link {
     required: true,
     trim: true,
     validate: function (link) {
-      return new RegExp("^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|v\/)?)([\\w\-]+)$").test(link) ||
+      return new RegExp("^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube\.com|youtu.be))(\/(?:[\\w\-]+\\?v=|embed\/|v\/)?)([\\w\-]+)$").test(link) ||
           new RegExp("^(?:(?:https?):)?(?:\/\/)?(?:www\.)?(?:(?:dailymotion\.com(?:\/embed)?\/video)|dai\.ly)\/([a-zA-Z0-9]+)(?:_[\w_-]+)?$").test(link);
     }
   })

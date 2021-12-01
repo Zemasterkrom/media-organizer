@@ -1,6 +1,6 @@
 import {Note} from "./note.type";
 import {Link, LinkType} from "./link.type";
-import {FileDocument, FileDocumentType} from "./file-document.type";
+import {FileDocument, FileDocumentType} from "./filerFields";
 
 export type Resource = (Note | FileDocument | Link) & CommonResource;
 export type Type = (LinkType | FileDocumentType);

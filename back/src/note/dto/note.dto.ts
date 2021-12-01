@@ -1,12 +1,11 @@
-import {IsDate, IsDateString, IsNotEmpty, IsOptional, IsString} from 'class-validator';
-import { ApiProperty } from '@nestjs/swagger';
-import { NoteEntity } from '../entities/note.entity';
-import {Schema} from "mongoose";
+import {IsDateString, IsNotEmpty, IsOptional, IsString} from 'class-validator';
+import {ApiProperty} from '@nestjs/swagger';
+import {NoteEntity} from '../entities/note.entity';
 
 export class NoteDto {
   @ApiProperty({
     name: 'name',
-    description: 'name',
+    description: 'Note resource name',
     example: 'Default note',
   })
   @IsString()
@@ -15,7 +14,7 @@ export class NoteDto {
 
   @ApiProperty({
     name: 'note',
-    description: 'note',
+    description: 'Note content',
     example: 'This is a default note',
   })
   @IsString()
@@ -24,7 +23,7 @@ export class NoteDto {
 
   @ApiProperty({
     name: 'date',
-    description: 'date',
+    description: 'Last updated note resource date',
     example: new Date(Date.now()).toISOString(),
   })
   @IsDateString()

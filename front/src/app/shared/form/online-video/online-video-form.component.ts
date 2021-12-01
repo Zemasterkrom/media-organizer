@@ -1,11 +1,11 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
-import {CustomValidators} from "../CustomValidators";
+import {CustomValidators} from "../../validators/custom-validators";
 import {FormComponent} from "../form.component";
 import {Errors, Link} from "../../types/link.type";
 import {OnlineVideoService} from "../../services/online-video.service";
 import {HttpStatusCode} from "@angular/common/http";
-import {removeUnwantedFields} from "../../types/link.type";
+import {filterFields} from "../../types/link.type";
 
 @Component({
   selector: 'online-video-form',
@@ -83,8 +83,12 @@ export class OnlineVideoFormComponent extends FormComponent {
    * @param video Vidéo à ajouter
    */
   addOnlineVideo(video: Link) {
-    this._onlineVideoService.addOne(video).subscribe(() => this._onlineVideoService.navigateToHome(), (error) => {
-      this._error = error.statusCode === HttpStatusCode.Conflict || HttpStatusCode.UnprocessableEntity ? Errors.ALREADY_EXISTS : Errors.INTERNAL_ERROR;
+    this._onlineVideoService.addOne(filterFields(video)).subscribe(() => this._onlineVideoService.navigateToHome(), (error) => {
+      if (error.status > 0) {
+        this._error = error.statusCode === HttpStatusCode.Conflict || HttpStatusCode.UnprocessableEntity ? Errors.ALREADY_EXISTS : Errors.INTERNAL_ERROR;
+      } else {
+        this._error = Errors.INTERNAL_ERROR;
+      }
     });
   }
 
@@ -94,19 +98,23 @@ export class OnlineVideoFormComponent extends FormComponent {
    * @param video Vidéo
    */
   updateOnlineVideo(id: string | undefined, video: Link) {
-    this._onlineVideoService.updateOne(id, removeUnwantedFields(video)).subscribe(() => this._onlineVideoService.navigateByRoute(this._onlineVideoService.getBaseUrl()), (error) => {
+    this._onlineVideoService.updateOne(id, filterFields(video)).subscribe(() => this._onlineVideoService.navigateByRoute(this._onlineVideoService.getBaseUrl()), (error) => {
 
-      switch (error.statusCode) {
-        case HttpStatusCode.Conflict:
-        case HttpStatusCode.UnprocessableEntity:
-          this._error = Errors.ALREADY_EXISTS;
-          break;
-        case HttpStatusCode.NotFound:
-          this._error = Errors.NOT_FOUND;
-          break;
-        default:
-          this._error = Errors.INTERNAL_ERROR;
-          break;
+      if (error.status > 0) {
+        switch (error.statusCode) {
+          case HttpStatusCode.Conflict:
+          case HttpStatusCode.UnprocessableEntity:
+            this._error = Errors.ALREADY_EXISTS;
+            break;
+          case HttpStatusCode.NotFound:
+            this._error = Errors.NOT_FOUND;
+            break;
+          default:
+            this._error = Errors.INTERNAL_ERROR;
+            break;
+        }
+      } else {
+        this._error = Errors.INTERNAL_ERROR;
       }
     });
   }
