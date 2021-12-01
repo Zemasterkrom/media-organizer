@@ -86,7 +86,7 @@ export class NoteFormComponent extends FormComponent {
   }
 
   /**
-   * Ajouter une note
+   * Mettre à jour une note
    * @param id Identifiant
    * @param note Note
    */

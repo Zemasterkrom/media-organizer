@@ -5,8 +5,8 @@ import {catchError, defaultIfEmpty, Observable, of, throwError} from 'rxjs';
 import {filter, map, mergeMap} from 'rxjs/operators';
 import {Doc} from './doc.schema';
 import {DocEntity} from './entities/doc.entity';
-import {DocDto} from './dto/doc.dto';
 import * as moment from 'moment';
+import {DocAddDto} from "./dto/doc-add.dto";
 
 @Injectable()
 export class DocService {
@@ -57,9 +57,10 @@ export class DocService {
    *
    * @param document to create
    *
+   * @param file filename
    * @returns {Observable<DocEntity>}
    */
-  add = (document: DocDto, file: string): Observable<DocEntity> => {
+  add = (document: DocAddDto, file: string): Observable<DocEntity> => {
     document.date = moment().utc().format();
     document.path = file;
     return this._docDao.add(document).pipe(
@@ -76,28 +77,34 @@ export class DocService {
    * @param {string} id
    * @param document data to update
    *
+   * @param file
+   * @Operation(consumes={"multipart/form-data"}),
    * @returns {Observable<DocEntity>}
    */
-  update = (id: string, document: DocDto): Observable<DocEntity> =>
-    this._docDao.update(id, document).pipe(
-      catchError((e) =>
-        e.code === 11000
-          ? throwError(
-              () =>
-                new ConflictException(
-                  `doc with name '${document.name}' already exists`,
-                ),
-            )
-          : throwError(() => new UnprocessableEntityException(e.message)),
-      ),
-      mergeMap((_: Doc) =>
-        !!_
-          ? of(new DocEntity(_))
-          : throwError(
-              () => new NotFoundException(`Doc with id '${id}' not found`),
-            ),
-      ),
-    );
+  update = (id: string, document: DocAddDto, file: string): Observable<DocEntity> => {
+      document.date = moment().utc().format();
+      document.path = file;
+
+      return this._docDao.update(id, document).pipe(
+          catchError((e) =>
+              e.code === 11000
+                  ? throwError(
+                      () =>
+                          new ConflictException(
+                              `doc with name '${document.name}' already exists`,
+                          ),
+                  )
+                  : throwError(() => new UnprocessableEntityException(e.message)),
+          ),
+          mergeMap((_: Doc) =>
+              !!_
+                  ? of(new DocEntity(_))
+                  : throwError(
+                      () => new NotFoundException(`Doc with id '${id}' not found`),
+                  ),
+          ),
+      );
+  }
 
   /**
    * Deletes one in list

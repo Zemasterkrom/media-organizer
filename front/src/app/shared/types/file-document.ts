@@ -27,6 +27,7 @@ export enum Errors {
 }
 
 export function filterFields(file: FileDocument) : FileDocument {
+  delete file.id;
   delete file.date;
   delete file.type;
   delete file.descriptor;

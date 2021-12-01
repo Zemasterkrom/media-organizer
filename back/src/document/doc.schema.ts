@@ -30,15 +30,17 @@ export class Doc {
 
   @Prop({
     type: String,
-    required: true,
+    required: false,
     trim: true,
+    default: ''
   })
   type: string;
 
   @Prop({
     type: String,
-    required: true,
+    required: false,
     trim: true,
+    default: ''
   })
   path: string;
 

@@ -1,11 +1,11 @@
 import {Component, EventEmitter, Input} from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {CustomValidators} from "../../validators/custom-validators";
-import {Errors, filterFields, Note} from "../../types/note.type";
+import {Errors} from "../../types/file-document";
 import {FormComponent} from "../form.component";
 import {HttpStatusCode} from "@angular/common/http";
 import {DocumentService} from "../../services/document.service";
-import {FileDocument} from "../../types/file-document";
+import {FileDocument, filterFields} from "../../types/file-document";
 
 @Component({
   selector: 'document-form',
@@ -65,16 +65,19 @@ export class DocumentFormComponent extends FormComponent {
       id: new FormControl(),
       name: new FormControl('', Validators.compose([
         Validators.required, CustomValidators.notEmpty
+      ])),
+      file: new FormControl(undefined,  Validators.compose([
+        Validators.required
       ]))
     })
   }
 
   /**
-   * Ajouter une note
-   * @param note Note
+   * Ajouter un document
+   * @param doc Document
    */
-  addNote(note: Note) {
-    this._documentService.addOne(filterFields(note)).subscribe(() => this._documentService.navigateToHome(), (error) => {
+  addDocument(doc: FileDocument) {
+    this._documentService.addOne(filterFields(doc)).subscribe(() => this._documentService.navigateToHome(), (error) => {
       if (error.status > 0) {
         this._error = error.statusCode === HttpStatusCode.Conflict || HttpStatusCode.UnprocessableEntity ? Errors.ALREADY_EXISTS : Errors.INTERNAL_ERROR;
       } else {
@@ -84,12 +87,12 @@ export class DocumentFormComponent extends FormComponent {
   }
 
   /**
-   * Ajouter une note
+   * Mettre à jour un document
    * @param id Identifiant
-   * @param note Note
+   * @param doc Document
    */
-  updateNote(id: string, note: Note) {
-    this._documentService.updateOne(id, filterFields(note)).subscribe(() => this._documentService.navigateByRoute(this._documentService.getBaseUrl()), (error) => {
+  updateDocument(id: string, doc: FileDocument) {
+    this._documentService.updateOne(id, filterFields(doc)).subscribe(() => this._documentService.navigateByRoute(this._documentService.getBaseUrl()), (error) => {
       if (error.status > 0) {
         switch (error.status) {
           case HttpStatusCode.Conflict:
@@ -111,5 +114,13 @@ export class DocumentFormComponent extends FormComponent {
 
   isNotFound(error: string) {
     return error === Errors.NOT_FOUND;
+  }
+
+  /**
+   * Mettre à jour le fichier à envoyer
+   * @param data Données reçues par le formulaire
+   */
+  changeFile(data: any) {
+    this._model.file = data.files.item(0);
   }
 }

@@ -34,6 +34,7 @@ import {DocEntity} from './entities/doc.entity';
 import {SearchParams} from '../validators/search-params';
 import {diskStorage} from 'multer';
 import {editFileName} from '../interceptors/file.interceptor';
+import {DocAddDto} from "./dto/doc-add.dto";
 
 @ApiTags('document')
 @Controller('document')
@@ -94,11 +95,12 @@ export class DocController {
   /**
    * Handler to answer to POST /Doc/add route
    *
-   * @param DocDto data to create
    *
    * @UploadedFile file to upload
    *
    * @returns Observable<DocEntity>
+   * @param docAddDto
+   * @param file
    */
   @ApiCreatedResponse({
     description: 'The Doc has been successfully created',
@@ -126,10 +128,10 @@ export class DocController {
     }),
   )
   uploadFile(
-    @Body() docDto: DocDto,
+    @Body() docAddDto: DocAddDto,
     @UploadedFile() file: Express.Multer.File,
   ) {
-    return this._docService.add(docDto, file.filename);
+    return this._docService.add(docAddDto, file.filename);
   }
 
   /**
@@ -138,6 +140,7 @@ export class DocController {
    * @param {HandlerParams} params list of route params to take Doc id
    * @param DocDto data to update
    *
+   * @param file
    * @returns Observable<DocEntity>
    */
   @ApiOkResponse({
@@ -156,19 +159,33 @@ export class DocController {
   @ApiUnprocessableEntityResponse({
     description: "The request can't be performed in the database",
   })
+  @ApiBody({
+    description: 'Payload to update a new Doc',
+    type: DocAddDto,
+  })
   @ApiParam({
     name: 'id',
     description: 'Unique identifier of the Doc in the database',
     type: String,
     allowEmptyValue: false,
   })
+  @ApiConsumes('multipart/form-data')
   @ApiBody({ description: 'Payload to update a Doc', type: DocDto })
   @Put('update/:id')
+  @UseInterceptors(
+      FileInterceptor('file', {
+        storage: diskStorage({
+          destination: './public',
+          filename: editFileName,
+        }),
+      }),
+  )
   update(
     @Param() params: HandlerParams,
-    @Body() DocDto: DocDto,
+    @Body() DocDto: DocAddDto,
+    @UploadedFile() file: Express.Multer.File
   ): Observable<DocEntity> {
-    return this._docService.update(params.id, DocDto);
+    return this._docService.update(params.id, DocDto, file.filename);
   }
 
   /**
