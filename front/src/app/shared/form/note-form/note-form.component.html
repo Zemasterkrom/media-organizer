@@ -9,7 +9,7 @@
         <tr>
           <td>
             <mat-form-field>
-              <input matInput autocomplete="disabled" placeholder="Nom de la note" formControlName="name" required name="name" />
+              <input matInput autocomplete="disabled" placeholder="Nom de la ressource" formControlName="name" required name="name" />
               <mat-error *ngIf="form.get('name')?.dirty && form.get('name')?.hasError('notEmpty')">
                 Le nom de la note ne peut pas être <strong>vide</strong>
               </mat-error>

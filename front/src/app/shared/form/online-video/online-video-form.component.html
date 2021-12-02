@@ -9,7 +9,7 @@
         <tr>
           <td>
             <mat-form-field class="mat-form-field-wrapper">
-              <input autocomplete="disabled" matInput placeholder="Nom de la vidéo" formControlName="name" required
+              <input autocomplete="disabled" matInput placeholder="Nom de la ressource" formControlName="name" required
                      name="name"/>
               <mat-error *ngIf="form.get('name')?.dirty && form.get('name')?.hasError('notEmpty')">
                 Le nom de la vidéo ne peut pas être <strong>vide</strong>

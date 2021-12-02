@@ -24,6 +24,7 @@ export class Note {
     @Prop({
         type: String,
         required: true,
+        unique: true,
         trim: false,
     })
     name: string;

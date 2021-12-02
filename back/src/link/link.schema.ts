@@ -25,6 +25,7 @@ export class Link {
     type: String,
     required: true,
     trim: false,
+      unique: true
   })
   name: string;
 
@@ -39,6 +40,7 @@ export class Link {
   @Prop({
     type: String,
     required: true,
+      unique: true,
     trim: true,
     validate: function (link) {
       return new RegExp("^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube\.com|youtu.be))(\/(?:[\\w\-]+\\?v=|embed\/|v\/)?)([\\w\-]+)$").test(link) ||

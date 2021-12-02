@@ -25,6 +25,7 @@ export class Doc {
     type: String,
     required: true,
     trim: false,
+    unique: true
   })
   name: string;
 
