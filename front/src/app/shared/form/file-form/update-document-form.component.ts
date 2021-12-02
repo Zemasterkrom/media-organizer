@@ -14,7 +14,7 @@ import {FileDocument} from "../../types/file-document";
 /**
  * Formulaire de mise à jour d'une note en ligne
  */
-export class UpdateFileFormComponent extends DocumentFormComponent implements OnInit {
+export class UpdateDocumentFormComponent extends DocumentFormComponent implements OnInit {
 
   /**
    * Constructeur de UpdateNoteFormComponent

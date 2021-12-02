@@ -1,11 +1,10 @@
 import {Component, EventEmitter, Input} from '@angular/core';
 import {FormControl, FormGroup, Validators} from "@angular/forms";
 import {CustomValidators} from "../../validators/custom-validators";
-import {Errors} from "../../types/file-document";
+import {Errors, FileDocument} from "../../types/file-document";
 import {FormComponent} from "../form.component";
 import {HttpStatusCode} from "@angular/common/http";
 import {DocumentService} from "../../services/document.service";
-import {FileDocument, filterFields} from "../../types/file-document";
 
 @Component({
   selector: 'document-form',
@@ -13,10 +12,15 @@ import {FileDocument, filterFields} from "../../types/file-document";
   styleUrls: ['./document-form.component.css']
 })
 /**
- * Formulaire de note. Une note est une ressource textuelle simple.
+ * Formulaire de document. Un document peut représenter tout type de document.
  */
 export class DocumentFormComponent extends FormComponent {
-  file:File;
+
+  /**
+   * Représente le fichier associé au document
+   * @protected
+   */
+  protected _file:File;
   /**
    * Modèle d'un document du formulaire
    * @private
@@ -30,12 +34,12 @@ export class DocumentFormComponent extends FormComponent {
   private readonly _submit$: EventEmitter<FileDocument>;
 
   /**
-   * Constructeur de NoteFormComponent
+   * Constructeur de DocumentFormComponent
    */
   constructor(private _documentService: DocumentService) {
     super(_documentService);
     this._model = {} as FileDocument;
-    this.file = {} as File;
+    this._file = {} as File;
     this._submit$ = new EventEmitter<FileDocument>();
     this._form = this._buildForm();
   }
@@ -78,13 +82,7 @@ export class DocumentFormComponent extends FormComponent {
    * @param doc Document
    */
   addDocument(doc: FileDocument) {
-    var formData = new FormData();
-    if (this.file) {
-      formData.append("file", this.file, this.file.name);
-      const nn = this._form.get("name")?.value;
-      formData.append("name", nn);
-    }
-    this._documentService.addOne(formData).subscribe(() => this._documentService.navigateToHome(), (error) => {
+    this._documentService.addOne(this.buildMultipartForm()).subscribe(() => this._documentService.navigateToHome(), (error) => {
       if (error.status > 0) {
         this._error = error.statusCode === HttpStatusCode.Conflict || HttpStatusCode.UnprocessableEntity ? Errors.ALREADY_EXISTS : Errors.INTERNAL_ERROR;
       } else {
@@ -99,7 +97,7 @@ export class DocumentFormComponent extends FormComponent {
    * @param doc Document
    */
   updateDocument(id: string, doc: FileDocument) {
-    this._documentService.updateOne(id, filterFields(doc)).subscribe(() => this._documentService.navigateByRoute(this._documentService.getBaseUrl()), (error) => {
+    this._documentService.updateOne(id, this.buildMultipartForm()).subscribe(() => this._documentService.navigateByRoute(this._documentService.getBaseUrl()), (error) => {
       if (error.status > 0) {
         switch (error.status) {
           case HttpStatusCode.Conflict:
@@ -129,6 +127,21 @@ export class DocumentFormComponent extends FormComponent {
    */
   changeFile(data: any) {
     this._model.file = data.files[0];
-    this.file = data.files[0];
+    this._file = data.files[0];
+  }
+
+  /**
+   * Retourner les données dans un formulaire multipart pour l'envoi des fichiers
+   */
+  buildMultipartForm(): FormData {
+    let formData = new FormData();
+
+    if (this._file) {
+      formData.append("file", this._file, this._file.name);
+      const nn = this._form.get("name")?.value;
+      formData.append("name", nn);
+    }
+
+    return formData;
   }
 }

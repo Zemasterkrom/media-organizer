@@ -33,7 +33,8 @@ import {FormatDataSourcePipe} from "./shared/pipes/format-data-source.pipe";
 import { UpdateNoteFormComponent } from './shared/form/note-form/update-note-form.component';
 import {UpdateOnlineVideoFormComponent} from "./shared/form/online-video/update-online-video-form.component";
 import {DocumentFormComponent} from "./shared/form/file-form/document-form.component";
-import {UpdateFileFormComponent} from "./shared/form/file-form/update-file-form.component";
+import {UpdateDocumentFormComponent} from "./shared/form/file-form/update-document-form.component";
+import {DocumentListComponent} from "./items-list/document-list/document-list.component";
 
 registerLocaleData(localeFr)
 
@@ -54,7 +55,8 @@ registerLocaleData(localeFr)
     OnlineVideoFormComponent,
     UpdateOnlineVideoFormComponent,
     DocumentFormComponent,
-    UpdateFileFormComponent
+    UpdateDocumentFormComponent,
+    DocumentListComponent
   ],
   imports: [
     BrowserModule,

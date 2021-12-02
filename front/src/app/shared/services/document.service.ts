@@ -6,6 +6,7 @@ import {Location} from "@angular/common";
 import {Router} from "@angular/router";
 import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
+import {environment} from "../../../environments/environment";
 
 @Injectable({
   providedIn: 'root'
@@ -18,6 +19,24 @@ export class DocumentService extends BaseService {
     super(__http, _documentRouter, _documentLocation);
     this.buildService("documents");
     this.defaultResource = Object.assign({}, DOCUMENTS[0]);
+  }
+
+  /**
+   * Obtenir l'URL d'affichage d'un document stocké sur le back
+   * @param id Identifiant du document
+   */
+  getViewUrl(id: string): string {
+    let url = `${environment.backend.protocol}://${environment.backend.host}`;
+
+    if (environment.backend.port) {
+      url += `:${environment.backend.port}`;
+    }
+
+    let resId = (<FileDocument[]>super.resources).filter((doc: FileDocument) => {
+      return doc.id === id;
+    })[0].path;
+
+    return url + "/" + resId;
   }
 
   /**

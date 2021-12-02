@@ -82,7 +82,7 @@ export class BaseService {
    * Obtenir l'URL de vue d'un item
    * @param id Identifiant d'un item
    */
-  getViewUrl(id: number): string {
+  getViewUrl(id: string): string {
     return this._urls.frontend.one ? this._urls.frontend.one.replace(":id", id) : "";
   }
 
@@ -90,7 +90,7 @@ export class BaseService {
    * Obtenir l'URL associée à la modification d'un item
    * @param id Identifiant d'un item
    */
-  getEditUrl(id: number): string {
+  getEditUrl(id: string): string {
     return this._urls.frontend.update ? this._urls.frontend.update.replace(":id", id) : "";
   }
 
@@ -180,19 +180,19 @@ export class BaseService {
 
   /**
    * Ajouter une nouvelle ressource
-   * @param newRes Nouvelle ressource
+   * @param newRes Nouvelle ressource (ou ressource sérialisée à travers un encodage multipart)
    */
-  addOne(newRes: any): Observable<any> {
+  addOne(newRes: Resource | FormData): Observable<any> {
     return this._http.post<Resource>(this._urls.backend.add, newRes);
   }
 
   /**
    * Mettre à jour une ressource
    * @param id Identifiant
-   * @param res Nouvelle ressource
+   * @param res Nouvelle ressource (ou ressource sérialisée à travers un encodage multipart)
    */
-  updateOne(id: string | undefined, res: Resource): Observable<any> {
-    return this._http.put<Resource>(this._urls.backend.update.replace(':id', id), res, BaseService._options());
+  updateOne(id: string | undefined, res: Resource | FormData): Observable<any> {
+    return this._http.put<Resource>(this._urls.backend.update.replace(':id', id), res);
   }
 
   /**

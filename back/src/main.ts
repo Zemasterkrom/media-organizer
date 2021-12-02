@@ -8,9 +8,7 @@ import {LinkModule} from './link/link.module';
 import {NoteModule} from './note/note.module';
 import {DocModule} from "./document/doc.module";
 import {NestExpressApplication} from "@nestjs/platform-express";
-import * as bodyParser from 'body-parser';
 import * as express from 'express';
-import { join } from 'path';
 
 export const PUBLIC_PATH = require('path').resolve(__dirname, '..') + "/public";
 
@@ -18,9 +16,11 @@ async function bootstrap(config: AppConfig, swaggerConfig: SwaggerConfig) {
   // create NestJS application
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
-  app.use('/public', express.static(join(__dirname, '..', 'public')));
-  app.useStaticAssets(join(__dirname, '..', 'static'));
+  // Utiliser le dossier public pour stocker des documents
+  app.use('/public', express.static(PUBLIC_PATH));
+
   // autoriser le téléchargement des données uploadées
+  app.useStaticAssets(PUBLIC_PATH);
 
   // enable CORS for NG Application's calls
   await app.enableCors({ origin: config.cors });

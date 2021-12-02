@@ -21,6 +21,13 @@ export class DocDto {
     @IsOptional()
     date: string;
 
+    @ApiProperty({
+        name: 'file',
+        type: 'string',
+        format: 'binary'
+    })
+    file: Express.Multer.File;
+
     constructor(partial: Partial<DocEntity>) {
         Object.assign(this, partial);
     }

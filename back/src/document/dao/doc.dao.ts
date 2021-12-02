@@ -74,8 +74,8 @@ export class DocDao {
      *
      * @return {Observable<Doc | void>}
      */
-    update = (id: string, document: DocAddDto): Observable<Doc | void> =>
-        from(
+    update = (id: string, document: DocAddDto): Observable<Doc | void> => {
+        return from(
             this._docModel.findByIdAndUpdate(id, document, {
                 new: true,
                 runValidators: true,
@@ -85,7 +85,7 @@ export class DocDao {
             map((doc: DocDocument) => doc.toJSON()),
             defaultIfEmpty(undefined)
         );
-
+    }
 
     /**
      * Delete

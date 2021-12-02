@@ -3,12 +3,12 @@
     <h1>Rechercher un voyage</h1>
     <p>
       <mat-form-field class="full-width">
-        <input type="text" matInput placeholder="Name" formControlName="name" requis name="name" />
+        <input type="text" matInput placeholder="Name" formControlName="name" required name="name" />
       </mat-form-field>
     </p>
     <p>
       <mat-form-field class="full-width">
-        <input type="text" matInput placeholder="Type" formControlName="type" requis name="type" />
+        <input type="text" matInput placeholder="Type" formControlName="type" required name="type" />
       </mat-form-field>
     </p>
   </form>
@@ -54,7 +54,7 @@
     <ng-container matColumnDef="expandedDetail">
       <td mat-cell *matCellDef="let resource" [attr.colspan]="(columns | numkeys) + 3">
         <div class="resource-detail center" [@expansion]="resource == expandedResource ? 'expanded' : 'collapsed'">
-          <div>
+          <div *ngIf="resource.descriptor">
             <div class="resource-descriptor" [innerHTML]="trust(resource)"></div>
           </div>
         </div>

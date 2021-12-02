@@ -9,6 +9,7 @@ export enum FileDocumentType {
 }
 
 export type FileDocument = {
+  path?: string,
   type?: FileDocumentType,
   file: File,
 } & CommonResource;
@@ -16,7 +17,6 @@ export type FileDocument = {
 export const FILE_DOCUMENT_KEYS = {
   name: "Nom",
   type: "Type",
-  path: "Chemin",
   dateAsString: "Date d'ajout"
 };
 

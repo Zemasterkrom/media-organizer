@@ -139,7 +139,10 @@ export class ResourceListComponent implements OnChanges{
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes.service) this._service = changes.service.currentValue;
-    if (changes.resources) this._dataSource.data = changes.resources.currentValue;
+    if (changes.resources) {
+      this._dataSource.data = changes.resources.currentValue;
+      this._service.resources = this._resources;
+    }
   }
 
   /**
@@ -170,7 +173,7 @@ export class ResourceListComponent implements OnChanges{
    * Obtenir l'URL de vue d'un item
    * @param id Identifiant d'un item
    */
-  getViewUrl(id: number): string {
+  getViewUrl(id: string): string {
     return this._service.getViewUrl(id);
   }
 
@@ -178,7 +181,7 @@ export class ResourceListComponent implements OnChanges{
    * Obtenir l'URL associée à la modification d'un item
    * @param id Identifiant d'un item
    */
-  getEditUrl(id: number): string {
+  getEditUrl(id: string): string {
     return this._service.getEditUrl(id);
   }
 
@@ -204,7 +207,6 @@ export class ResourceListComponent implements OnChanges{
    * @param resource Ressource à supprimer
    */
   delete(resource: Resource) {
-    console.log(this._service)
     this._service.deleteOne(resource.id as string)
       .subscribe((id: string) => {
         this._resources = <ResourceList>(this._resources as Resource[]).filter((res: Resource) => res.id !== id)
