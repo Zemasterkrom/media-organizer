@@ -1,0 +1,7 @@
+<div *ngIf="model.descriptor" class="center">
+  <h1>Affichage de la note : {{model.name}}</h1>
+  <div class="resource-descriptor">{{model.descriptor}}</div>
+</div>
+<div *ngIf="error.length > 0" class="center">
+  <h1>La note recherchée n'existe pas</h1>
+</div>

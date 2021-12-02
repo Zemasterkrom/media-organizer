@@ -35,6 +35,8 @@ import {UpdateOnlineVideoFormComponent} from "./shared/form/online-video/update-
 import {DocumentFormComponent} from "./shared/form/file-form/document-form.component";
 import {UpdateDocumentFormComponent} from "./shared/form/file-form/update-document-form.component";
 import {DocumentListComponent} from "./items-list/document-list/document-list.component";
+import { OnlineVideoViewerComponent } from './shared/resource-viewer/online-video-viewer/online-video-viewer.component';
+import {NoteViewerComponent} from "./shared/resource-viewer/note-viewer/note-viewer.component";
 
 registerLocaleData(localeFr)
 
@@ -56,7 +58,9 @@ registerLocaleData(localeFr)
     UpdateOnlineVideoFormComponent,
     DocumentFormComponent,
     UpdateDocumentFormComponent,
-    DocumentListComponent
+    DocumentListComponent,
+    NoteViewerComponent,
+    OnlineVideoViewerComponent
   ],
   imports: [
     BrowserModule,

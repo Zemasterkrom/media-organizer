@@ -1,18 +1,19 @@
 <div>
   <form novalidate [formGroup]="form">
-    <h1>Rechercher un voyage</h1>
-    <p>
-      <mat-form-field class="full-width">
-        <input type="text" matInput placeholder="Name" formControlName="name" required name="name" />
-      </mat-form-field>
-    </p>
-    <p>
-      <mat-form-field class="full-width">
-        <input type="text" matInput placeholder="Type" formControlName="type" required name="type" />
-      </mat-form-field>
-    </p>
+    <div class="center">
+      <p>
+        <mat-form-field class="full-width">
+          <input type="text" matInput placeholder="Nom" formControlName="name" required name="name" />
+        </mat-form-field>
+      </p>
+      <p>
+        <mat-form-field class="full-width">
+          <input type="text" matInput placeholder="Type" formControlName="type" required name="type" />
+        </mat-form-field>
+      </p>
+      <a mat-raised-button color="warn" (click)="find()">Filtrer</a>
+    </div>
   </form>
-  <a mat-raised-button color="warn" (click)="find()">Filtrer</a>
 </div>
 
 
