@@ -132,8 +132,7 @@ export class DocController {
     @Body() docAddDto: DocAddDto,
     @UploadedFile() file: Express.Multer.File,
   ) {
-    const ext = extname(file.originalname);
-    return this._docService.add(docAddDto, file.filename, ext);
+    return this._docService.add(docAddDto, file.filename, extname(file.originalname));
   }
 
   /**
@@ -187,7 +186,7 @@ export class DocController {
     @Body() DocDto: DocAddDto,
     @UploadedFile() file: Express.Multer.File
   ): Observable<DocEntity> {
-    return this._docService.update(params.id, DocDto, file.filename);
+    return this._docService.update(params.id, DocDto, file.filename, extname(file.originalname));
   }
 
   /**

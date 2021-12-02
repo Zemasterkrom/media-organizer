@@ -55,15 +55,16 @@ export class DocService {
   /**
    * Check if already exists and add it in list
    *
-   * @param document to create
-   *
+   * @param document to create=
    * @param file filename
+   * @param ext Extension du fichier
    * @returns {Observable<DocEntity>}
    */
   add = (document: DocAddDto, file: string, ext: string): Observable<DocEntity> => {
     document.date = moment().utc().format();
     document.path = file;
     document.type = ext;
+
     return this._docDao.add(document).pipe(
       catchError((e) =>
         throwError(() => new UnprocessableEntityException(e.message)),
@@ -78,13 +79,14 @@ export class DocService {
    * @param {string} id
    * @param document data to update
    *
-   * @param file
-   * @Operation(consumes={"multipart/form-data"}),
+   * @param file Fichier
+   * @param ext Extension
    * @returns {Observable<DocEntity>}
    */
-  update = (id: string, document: DocAddDto, file: string): Observable<DocEntity> => {
+  update = (id: string, document: DocAddDto, file: string, ext: string): Observable<DocEntity> => {
       document.date = moment().utc().format();
       document.path = file;
+      document.type = ext;
 
       return this._docDao.update(id, document).pipe(
           catchError((e) =>
