@@ -4,6 +4,7 @@ import {animate, state, style, transition, trigger} from "@angular/animations";
 import {MatTableDataSource} from "@angular/material/table";
 import {BaseService} from "../services/base.service";
 import {DomSanitizer, SafeHtml} from "@angular/platform-browser";
+import {FormControl, FormGroup} from "@angular/forms";
 
 @Component({
   selector: 'resource-list',
@@ -21,6 +22,9 @@ import {DomSanitizer, SafeHtml} from "@angular/platform-browser";
  * Permet de construire un générateur de liste générique pour les items ajoutés
  */
 export class ResourceListComponent implements OnChanges{
+  form: FormGroup;
+  query: string = '';
+
   /**
    * Colonnes à afficher
    * @protected
@@ -70,6 +74,11 @@ export class ResourceListComponent implements OnChanges{
    * @param _sanitizer Permet de filtrer les données et notamment autoriser (pour les contenus HTML)
    */
   constructor(private _service: BaseService, private _sanitizer: DomSanitizer) {
+    this.query = "";
+    this.form = new FormGroup({
+      name: new FormControl(null),
+      type: new FormControl(null),
+    });
     this._resources = [] as ResourceList;
     this._columns = {};
     this._expandedResource = {} as Resource;
@@ -130,7 +139,10 @@ export class ResourceListComponent implements OnChanges{
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes.service) this._service = changes.service.currentValue;
-    if (changes.resources) this._dataSource.data = changes.resources.currentValue;
+    if (changes.resources) {
+      this._dataSource.data = changes.resources.currentValue;
+      this._service.resources = this._resources;
+    }
   }
 
   /**
@@ -161,7 +173,7 @@ export class ResourceListComponent implements OnChanges{
    * Obtenir l'URL de vue d'un item
    * @param id Identifiant d'un item
    */
-  getViewUrl(id: number): string {
+  getViewUrl(id: string): string {
     return this._service.getViewUrl(id);
   }
 
@@ -169,7 +181,7 @@ export class ResourceListComponent implements OnChanges{
    * Obtenir l'URL associée à la modification d'un item
    * @param id Identifiant d'un item
    */
-  getEditUrl(id: number): string {
+  getEditUrl(id: string): string {
     return this._service.getEditUrl(id);
   }
 
@@ -195,11 +207,33 @@ export class ResourceListComponent implements OnChanges{
    * @param resource Ressource à supprimer
    */
   delete(resource: Resource) {
-    console.log(this._service)
     this._service.deleteOne(resource.id as string)
       .subscribe((id: string) => {
         this._resources = <ResourceList>(this._resources as Resource[]).filter((res: Resource) => res.id !== id)
         this._dataSource.data = this._resources;
       });
+  }
+
+  find() {
+    if (this.form.valid) {
+      this.query = '?';
+      const link = this.form.value;
+      for (const property in link) {
+        if (link[property] && link[property] != '') {
+          this.query += property + '=' + link[property] + '&';
+        }
+      }
+      this.query = this.query.slice(0, this.query.length - 1);
+      this._service.fetch(this.query)
+          .subscribe(
+              (res: Resource[]) => {
+                this._resources = <ResourceList>(res);
+                this._dataSource.data = this._resources;
+              },
+              (err) => {
+                console.error(err);
+              }
+          );
+    }
   }
 }

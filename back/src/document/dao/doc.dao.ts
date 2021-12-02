@@ -5,8 +5,8 @@ import {Doc, DocDocument} from '../doc.schema';
 import {defaultIfEmpty, from, Observable} from 'rxjs';
 import {filter, map} from 'rxjs/operators';
 import {SearchParams} from '../../validators/search-params';
-import {DocDto} from '../dto/doc.dto';
-import {Link} from '../../link/link.schema';
+import {DocAddDto} from "../dto/doc-add.dto";
+import {PUBLIC_PATH} from "../../main";
 
 @Injectable()
 export class DocDao {
@@ -56,11 +56,11 @@ export class DocDao {
     /**
      * Check if name already exists with index and add it in doc list
      *
-     * @param {DocDto} document to create
+     * @param {DocAddDto} document document to create
      *
-     * @return {Observable<Link>}
+     * @return {Observable<Doc>}
      */
-    add = (document: DocDto): Observable<Doc> =>
+    add = (document: DocAddDto): Observable<Doc> =>
         from(new this._docModel(document).save()).pipe(
             map((doc: DocDocument) => doc.toJSON()),
             defaultIfEmpty(undefined),
@@ -70,12 +70,12 @@ export class DocDao {
      * Update
      *
      * @param {string} id
-     * @param {DocDto} document
+     * @param {DocAddDto} document document to update
      *
      * @return {Observable<Doc | void>}
      */
-    update = (id: string, document: DocDto): Observable<Doc | void> =>
-        from(
+    update = (id: string, document: DocAddDto): Observable<Doc | void> => {
+        return from(
             this._docModel.findByIdAndUpdate(id, document, {
                 new: true,
                 runValidators: true,
@@ -83,8 +83,9 @@ export class DocDao {
         ).pipe(
             filter((doc: DocDocument) => !!doc),
             map((doc: DocDocument) => doc.toJSON()),
-            defaultIfEmpty(undefined),
+            defaultIfEmpty(undefined)
         );
+    }
 
     /**
      * Delete
@@ -96,7 +97,10 @@ export class DocDao {
     delete = (id: string): Observable<Doc | void> =>
         from(this._docModel.findByIdAndRemove(id)).pipe(
             filter((doc: DocDocument) => !!doc),
-            map((doc: DocDocument) => doc.toJSON()),
-            defaultIfEmpty(undefined),
+            map((doc: DocDocument) => {
+                require('fs').unlinkSync(PUBLIC_PATH + "/" +doc.path);
+                return doc.toJSON();
+            }),
+            defaultIfEmpty(undefined)
         );
 }

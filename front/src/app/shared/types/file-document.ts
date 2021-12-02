@@ -9,6 +9,7 @@ export enum FileDocumentType {
 }
 
 export type FileDocument = {
+  path?: string,
   type?: FileDocumentType,
   file: File,
 } & CommonResource;
@@ -16,17 +17,17 @@ export type FileDocument = {
 export const FILE_DOCUMENT_KEYS = {
   name: "Nom",
   type: "Type",
-  path: "Chemin",
   dateAsString: "Date d'ajout"
 };
 
 export enum Errors {
-  NOT_FOUND = "Le fichier cherché n'existe pas",
-  ALREADY_EXISTS = "Le fichier que vous tentez d'enregistrer existe déjà",
+  NOT_FOUND = "Le document cherché n'existe pas",
+  ALREADY_EXISTS = "Le nom de la ressource que vous tentez d'enregistrer existe déjà",
   INTERNAL_ERROR = "Une erreur interne est survenue"
 }
 
 export function filterFields(file: FileDocument) : FileDocument {
+  delete file.id;
   delete file.date;
   delete file.type;
   delete file.descriptor;

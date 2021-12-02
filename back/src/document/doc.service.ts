@@ -5,8 +5,8 @@ import {catchError, defaultIfEmpty, Observable, of, throwError} from 'rxjs';
 import {filter, map, mergeMap} from 'rxjs/operators';
 import {Doc} from './doc.schema';
 import {DocEntity} from './entities/doc.entity';
-import {DocDto} from './dto/doc.dto';
 import * as moment from 'moment';
+import {DocAddDto} from "./dto/doc-add.dto";
 
 @Injectable()
 export class DocService {
@@ -55,13 +55,16 @@ export class DocService {
   /**
    * Check if already exists and add it in list
    *
-   * @param document to create
-   *
+   * @param document to create=
+   * @param file filename
+   * @param ext Extension du fichier
    * @returns {Observable<DocEntity>}
    */
-  add = (document: DocDto, file: string): Observable<DocEntity> => {
+  add = (document: DocAddDto, file: string, ext: string): Observable<DocEntity> => {
     document.date = moment().utc().format();
     document.path = file;
+    document.type = ext;
+
     return this._docDao.add(document).pipe(
       catchError((e) =>
         throwError(() => new UnprocessableEntityException(e.message)),
@@ -76,28 +79,35 @@ export class DocService {
    * @param {string} id
    * @param document data to update
    *
+   * @param file Fichier
+   * @param ext Extension
    * @returns {Observable<DocEntity>}
    */
-  update = (id: string, document: DocDto): Observable<DocEntity> =>
-    this._docDao.update(id, document).pipe(
-      catchError((e) =>
-        e.code === 11000
-          ? throwError(
-              () =>
-                new ConflictException(
-                  `doc with name '${document.name}' already exists`,
-                ),
-            )
-          : throwError(() => new UnprocessableEntityException(e.message)),
-      ),
-      mergeMap((_: Doc) =>
-        !!_
-          ? of(new DocEntity(_))
-          : throwError(
-              () => new NotFoundException(`Doc with id '${id}' not found`),
-            ),
-      ),
-    );
+  update = (id: string, document: DocAddDto, file: string, ext: string): Observable<DocEntity> => {
+      document.date = moment().utc().format();
+      document.path = file;
+      document.type = ext;
+
+      return this._docDao.update(id, document).pipe(
+          catchError((e) =>
+              e.code === 11000
+                  ? throwError(
+                      () =>
+                          new ConflictException(
+                              `doc with name '${document.name}' already exists`,
+                          ),
+                  )
+                  : throwError(() => new UnprocessableEntityException(e.message)),
+          ),
+          mergeMap((_: Doc) =>
+              !!_
+                  ? of(new DocEntity(_))
+                  : throwError(
+                      () => new NotFoundException(`Doc with id '${id}' not found`),
+                  ),
+          ),
+      );
+  }
 
   /**
    * Deletes one in list

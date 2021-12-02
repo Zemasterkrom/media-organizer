@@ -25,20 +25,23 @@ export class Doc {
     type: String,
     required: true,
     trim: false,
+    unique: true
   })
   name: string;
 
   @Prop({
     type: String,
-    required: true,
+    required: false,
     trim: true,
+    default: ''
   })
   type: string;
 
   @Prop({
     type: String,
-    required: true,
+    required: false,
     trim: true,
+    default: ''
   })
   path: string;
 

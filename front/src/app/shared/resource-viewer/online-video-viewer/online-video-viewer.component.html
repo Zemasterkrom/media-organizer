@@ -1,0 +1,7 @@
+<div *ngIf="model.descriptor" class="center">
+  <h1>Affichage de la vidéo : {{model.name}}</h1>
+  <div class="resource-descriptor full-width-height" [innerHTML]="trust(model)"></div>
+</div>
+<div *ngIf="error.length > 0" class="center">
+  <h1>La vidéo recherchée n'existe pas</h1>
+</div>

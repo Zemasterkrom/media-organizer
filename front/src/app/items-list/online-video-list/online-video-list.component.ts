@@ -23,12 +23,16 @@ export class OnlineVideoListComponent extends ResourceListComponent {
     super(__onlineVideoService, __sanitizer);
     super.columns = LINK_KEYS;
     super.service = this.__onlineVideoService;
-    this.__onlineVideoService.fetch().subscribe((resources: Link[]) => {
+    if(super.query == undefined){
+      super.query = "";
+    }
+    this.__onlineVideoService.fetch(super.query).subscribe((resources: Link[]) => {
       resources.map((video: Link) => {
         video.descriptor = "<iframe width=\"560\" height=\"315\" src=\"" + video.link + "\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture\" allowfullscreen></iframe>";
       });
       super.resources = resources;
     });
+
   }
 
   /**

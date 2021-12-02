@@ -12,7 +12,7 @@ export class DocEntity {
   @Type(() => String)
   id: string;
 
-  @ApiProperty({ name: 'name', description: 'name', example: 'name' })
+  @ApiProperty({ name: 'name', description: 'Document name', example: 'name' })
   @Expose()
   @Type(() => String)
   name: string;
@@ -20,21 +20,20 @@ export class DocEntity {
   @ApiProperty({
     name: 'path',
     description: 'path',
-    example: '/home/imad/projet',
   })
   @Expose()
   @Type(() => String)
   path: string;
 
-  @ApiProperty({ name: 'type', description: 'type', example: 'type' })
+  @ApiProperty({ name: 'type', description: 'Document type (auto-detected)', example: 'Text' })
   @Expose()
   @Type(() => String)
   type: string;
 
   @ApiProperty({
     name: 'date',
-    description: 'Created At',
-    example: '2021-11-27T13:41:48.229Z',
+    description: 'Last updated document date',
+    example: new Date(Date.now()).toISOString(),
   })
   @Expose()
   @Type(() => Date)

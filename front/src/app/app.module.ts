@@ -32,6 +32,11 @@ import {OnlineVideoListComponent} from "./items-list/online-video-list/online-vi
 import {FormatDataSourcePipe} from "./shared/pipes/format-data-source.pipe";
 import { UpdateNoteFormComponent } from './shared/form/note-form/update-note-form.component';
 import {UpdateOnlineVideoFormComponent} from "./shared/form/online-video/update-online-video-form.component";
+import {DocumentFormComponent} from "./shared/form/file-form/document-form.component";
+import {UpdateDocumentFormComponent} from "./shared/form/file-form/update-document-form.component";
+import {DocumentListComponent} from "./items-list/document-list/document-list.component";
+import { OnlineVideoViewerComponent } from './shared/resource-viewer/online-video-viewer/online-video-viewer.component';
+import {NoteViewerComponent} from "./shared/resource-viewer/note-viewer/note-viewer.component";
 
 registerLocaleData(localeFr)
 
@@ -41,17 +46,21 @@ registerLocaleData(localeFr)
     HomeComponent,
     CategoryCardComponent,
     AddResourceComponent,
-    NoteFormComponent,
-    OnlineVideoFormComponent,
     ResourceListComponent,
     OnlineVideoListComponent,
-    NoteListComponent,
     NoteListComponent,
     NumkeysPipe,
     KeysPipe,
     FormatDataSourcePipe,
+    NoteFormComponent,
     UpdateNoteFormComponent,
-    UpdateOnlineVideoFormComponent
+    OnlineVideoFormComponent,
+    UpdateOnlineVideoFormComponent,
+    DocumentFormComponent,
+    UpdateDocumentFormComponent,
+    DocumentListComponent,
+    NoteViewerComponent,
+    OnlineVideoViewerComponent
   ],
   imports: [
     BrowserModule,

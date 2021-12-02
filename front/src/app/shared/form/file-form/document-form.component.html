@@ -1,9 +1,9 @@
 <div *ngIf="!(error && isUpdateMode && isNotFound(error))" class="center">
   <h1 *ngIf="isUpdateMode">
-    Mettre à jour une note
+    Mettre à jour un document
   </h1>
   <mat-dialog-content>
-    <form novalidate [formGroup]="form">
+    <form novalidate [formGroup]="form" enctype="multipart/form-data">
       <input type="hidden" formControlName="id" name="id" *ngIf="model.id !== undefined" value="{{model?.id}}" />
       <table>
         <tr>
@@ -11,15 +11,10 @@
             <mat-form-field>
               <input matInput autocomplete="disabled" placeholder="Nom de la ressource" formControlName="name" required name="name" />
               <mat-error *ngIf="form.get('name')?.dirty && form.get('name')?.hasError('notEmpty')">
-                Le nom de la note ne peut pas être <strong>vide</strong>
+                Le nom du fichier ne peut pas être <strong>vide</strong>
               </mat-error>
             </mat-form-field>
-            <mat-form-field>
-              <textarea matInput autocomplete="disabled" placeholder="Contenu de la note" formControlName="note" required name="note" ></textarea>
-              <mat-error *ngIf="form.get('note')?.dirty && form.get('note')?.hasError('notEmpty')">
-                Le nom de la note ne peut pas être <strong>vide</strong>
-              </mat-error>
-            </mat-form-field>
+            <input type="file" (change)="changeFile($event.target)" autocomplete="disabled" placeholder="Sélectionner un fichier" formControlName="file" required name="file" />
           </td>
         </tr>
       </table>
@@ -31,10 +26,10 @@
       {{error}}
     </mat-error>
     <button mat-button type="button" (click)="cancel()">Annuler</button>
-    <button *ngIf="isUpdateMode"  mat-button color="primary" type="submit" [disabled]="form.invalid" (click)="updateNote(form.get('id')?.value, form.value)">Mettre à jour la note</button>
-    <button *ngIf="!isUpdateMode"  mat-button color="primary" type="submit" [disabled]="form.invalid" (click)="addNote(form.value)">Ajouter la note</button>
+    <button *ngIf="isUpdateMode"  mat-button color="primary" type="submit" [disabled]="form.invalid" (click)="updateDocument(form.get('id')?.value, form.value)">Mettre à jour le document</button>
+    <button *ngIf="!isUpdateMode"  mat-button color="primary" type="submit" [disabled]="form.invalid" (click)="addDocument(form.value)">Ajouter le document</button>
   </mat-dialog-actions>
 </div>
 <div *ngIf="error && isUpdateMode && isNotFound(error)" class="center">
-  <h1>La note recherchée pour modification n'existe pas</h1>
+  <h1>Le document recherché pour modification n'existe pas</h1>
 </div>

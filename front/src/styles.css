@@ -60,6 +60,24 @@ a, a:visited {
   margin-bottom: 32px;
 }
 
+.inherit {
+  width: inherit;
+  height: inherit;
+}
+
+.full-width-height {
+  width: 100%;
+  height: 100%;
+}
+
+table {
+  margin-top: 10px;
+}
+
+iframe {
+  border: 0;
+}
+
 mat-form-field {
   width: 100%;
 }

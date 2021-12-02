@@ -1,3 +1,22 @@
+<div>
+  <form novalidate [formGroup]="form">
+    <div class="center">
+      <p>
+        <mat-form-field class="full-width">
+          <input type="text" matInput placeholder="Nom" formControlName="name" required name="name" />
+        </mat-form-field>
+      </p>
+      <p>
+        <mat-form-field class="full-width">
+          <input type="text" matInput placeholder="Type" formControlName="type" required name="type" />
+        </mat-form-field>
+      </p>
+      <a mat-raised-button color="warn" (click)="find()">Filtrer</a>
+    </div>
+  </form>
+</div>
+
+
 <div *ngIf="resources.length">
   <table [dataSource]="dataSource | formatDataSource" mat-table class="mat-elevation-z8" multiTemplateDataRows>
     <ng-container matColumnDef="{{column.key}}" *ngFor="let column of columns | keyvalue">
@@ -36,7 +55,7 @@
     <ng-container matColumnDef="expandedDetail">
       <td mat-cell *matCellDef="let resource" [attr.colspan]="(columns | numkeys) + 3">
         <div class="resource-detail center" [@expansion]="resource == expandedResource ? 'expanded' : 'collapsed'">
-          <div>
+          <div *ngIf="resource.descriptor">
             <div class="resource-descriptor" [innerHTML]="trust(resource)"></div>
           </div>
         </div>
